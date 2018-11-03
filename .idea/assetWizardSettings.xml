@@ -34,7 +34,8 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="134" />
+                                                <entry key="scalingPercent" value="108" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -45,7 +46,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundImage" value="C:\Users\yo_y_\Desktop\Digilogo.png" />
-                                      <entry key="foregroundImage" value="C:\Users\yo_y_\Desktop\Digilogo.png" />
+                                      <entry key="foregroundImage" value="C:\Users\yo_y_\Downloads\Telegram Desktop\photo_2018-10-25_21-30-09.jpg" />
                                       <entry key="legacyIconShape" value="CIRCLE" />
                                       <entry key="webIconShape" value="CIRCLE" />
                                     </map>

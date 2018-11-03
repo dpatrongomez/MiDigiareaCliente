@@ -1,3 +1,23 @@
 <resources>
-    <string name="app_name">Mi Digi-Área Cliente</string>
+    <string name="app_name">Área Digi</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main3">Main3Activity</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="action_example">Example action</string>
+    <string name="title_activity_area_cliente">Área Digi</string>
+    <string name="info_app">Esta aplicación NO es oficial. Es, y será siempre, gratuita y libre de anuncios.
+        Está realizada con el único objetivo de facilitar las gestiones a los usuarios de Digi Mobil,
+        ya que aún no se dispone de una aplicación oficial. \n \n
+Las credenciales introducidas por los usuarios son almacenadas únicamente en su propio teléfono con el propósito de
+        realizar el login de forma automática en el área web de Digi Mobil. El código fuente de la aplicación está disponible
+        de forma pública en Github (gcuadrado).</string>
 </resources>

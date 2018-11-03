@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         if (GestionarPreferences.getPrefSaltarInicio(this)){
-            Intent i = new Intent(MainActivity.this, WebpageActivity.class);
+            Intent i = new Intent(MainActivity.this, AreaClienteActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             finishAffinity();
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         String password=caja_pass.getText().toString();
         GestionarPreferences.guardarUsuario(usuario,this);
         GestionarPreferences.guardarContraseña(password,this);
-        Intent i = new Intent(MainActivity.this, WebpageActivity.class);
+        Intent i = new Intent(MainActivity.this, AreaClienteActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finishAffinity();
