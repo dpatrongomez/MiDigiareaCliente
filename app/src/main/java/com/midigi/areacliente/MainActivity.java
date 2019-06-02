@@ -7,6 +7,11 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.midigi.areacliente.servicios.Digi;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
 public class MainActivity extends AppCompatActivity {
 
 

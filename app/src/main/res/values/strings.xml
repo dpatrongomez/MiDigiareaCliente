@@ -12,6 +12,7 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
 
+
     <string name="action_example">Example action</string>
     <string name="title_activity_area_cliente">Área Digi</string>
     <string name="info_app">Esta aplicación NO es oficial. Es, y será siempre, gratuita y libre de anuncios.
@@ -20,4 +21,6 @@
 Las credenciales introducidas por los usuarios son almacenadas únicamente en su propio teléfono con el propósito de
         realizar el login de forma automática en el área web de Digi Mobil. El código fuente de la aplicación está disponible
         de forma pública en Github (gcuadrado).</string>
+    <string name="appwidget_text">HOLA</string>
+    <string name="add_widget">Add widget</string>
 </resources>
