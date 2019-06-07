@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.midigi.areacliente.modelo.Usuario;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,10 +26,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class GetDigiData extends AsyncTask<Context,Void,String> {
+public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
 
     @Override
-    protected String doInBackground(Context... contexts) {
+    protected Usuario doInBackground(Context... contexts) {
         Log.d("stop","doinbeackground");
         String usuario=GestionarPreferences.getUsuario(contexts[0]);
         String pass=GestionarPreferences.getContraseña(contexts[0]);
@@ -57,18 +59,56 @@ public class GetDigiData extends AsyncTask<Context,Void,String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String saldo="";
-        Pattern p= Pattern.compile("<strong>(.+?)</strong> MB");
-        Matcher m=p.matcher(respuesta);
-
-        if(m.find()){
-            saldo=m.group();
+        Usuario u=null;
+        if(respuesta.contains("Contrato")){
+            u=crearUsuarioContrato(respuesta);
+        }else{
+            u=crearUsuarioPrepago(respuesta);
         }
 
-        saldo=saldo.substring(saldo.indexOf(">")+1,saldo.lastIndexOf("<"));
+       // saldo=saldo.substring(saldo.indexOf(">")+1,saldo.lastIndexOf("<"));
 
 
-        return "Te quedan: "+saldo+" MB";
+        return u;
+    }
+
+    public Usuario crearUsuarioPrepago(String response){
+        String internet="";
+        String minutos="";
+        Pattern p= Pattern.compile("<strong>(.+?)</strong> MB\n" +
+                "\t\t\t\t\t\t<br>");
+        Matcher m=p.matcher(response);
+
+        if(m.find()){
+            internet=m.group(1);
+        }
+        p=Pattern.compile("<strong>(.+?) minutos nacionales </strong>");
+        m=p.matcher(response);
+        if(m.find()){
+            minutos=m.group();
+            minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
+        }
+        Usuario u=new Usuario(internet,minutos);
+        return u;
+    }
+
+    public Usuario crearUsuarioContrato(String response){
+        String internet="";
+        String minutos="";
+        Pattern p=Pattern.compile("<strong>(.+?) MB</strong> para navegar");
+       Matcher m=p.matcher(response);
+        if(m.find()){
+            internet=m.group();
+            internet=internet.substring(internet.indexOf(">")+1,internet.lastIndexOf("MB")-1);
+        }
+        p=Pattern.compile("<strong>(.+?) minutos nacionales </strong>");
+        m=p.matcher(response);
+        if(m.find()){
+            minutos=m.group();
+            minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos"));
+        }
+        Usuario u=new Usuario(internet,minutos);
+        return u;
     }
 
 

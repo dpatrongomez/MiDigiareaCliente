@@ -1,19 +1,21 @@
 package com.midigi.areacliente;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.PersistentCookieStore;
-import com.loopj.android.http.RequestParams;
+import com.midigi.areacliente.modelo.Usuario;
 import com.midigi.areacliente.servicios.Digi;
 
 import java.util.concurrent.ExecutionException;
-
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Implementation of App Widget functionality.
@@ -21,23 +23,64 @@ import cz.msebera.android.httpclient.Header;
 public class NewAppWidget extends AppWidgetProvider {
 
 
+
+
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
+        CharSequence widgetInternetText="";
+        CharSequence widgetMinutosText="";
 
-        GetDigiData g=new GetDigiData();
-        String h="hola";
+    if(new Digi().isNetwork(context)) {
+        GetDigiData g = new GetDigiData();
+        Usuario u = null;
         try {
-            h=g.execute(context).get();
+            u = g.execute(context).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        CharSequence widgetText = h;
+        if(u.getInternet()!=null && u.getMinutos()!=null) {
+            widgetInternetText = "Te quedan: " + u.getInternet() + " MB";
+            widgetMinutosText = "Te quedan: " + u.getMinutos() + " minutos";
+        }else{
+            widgetInternetText="Ocurrió un problema";
+        }
+    }else{
+        widgetInternetText = "Sin conexión a internet";
+        widgetMinutosText = "";
+    }
         // Construct the RemoteViews object*/
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+        views.setTextViewText(R.id.internet_widget, widgetInternetText);
+        views.setTextViewText(R.id.minutos_widget, widgetMinutosText);
+
+
+        //Create an Intent with the AppWidgetManager.ACTION_APPWIDGET_UPDATE action//
+
+        Intent intentUpdate = new Intent(context, NewAppWidget.class);
+        intentUpdate.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+//Update the current widget instance only, by creating an array that contains the widget’s unique ID//
+
+        int[] idArray = new int[]{appWidgetId};
+        intentUpdate.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, idArray);
+
+//Wrap the intent as a PendingIntent, using PendingIntent.getBroadcast()//
+
+        PendingIntent pendingUpdate = PendingIntent.getBroadcast(
+                context, appWidgetId, intentUpdate,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+//Send the pending intent in response to the user tapping the ‘Update’ TextView//
+
+        views.setOnClickPendingIntent(R.id.refrescarWidget, pendingUpdate);
+
+
+
+
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -49,7 +92,9 @@ public class NewAppWidget extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
+            Toast.makeText(context, "Consumo actualizado", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @Override
@@ -61,6 +106,10 @@ public class NewAppWidget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
     }
+
+
+
+
 
 
 }
