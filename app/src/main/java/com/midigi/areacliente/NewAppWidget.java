@@ -31,6 +31,7 @@ public class NewAppWidget extends AppWidgetProvider {
 
         CharSequence widgetInternetText="";
         CharSequence widgetMinutosText="";
+        CharSequence widgetNumTelf="";
 
     if(new Digi().isNetwork(context)) {
         GetDigiData g = new GetDigiData();
@@ -45,6 +46,7 @@ public class NewAppWidget extends AppWidgetProvider {
         if(u.getInternet()!=null && u.getMinutos()!=null) {
             widgetInternetText = "Te quedan: " + u.getInternet() + " MB";
             widgetMinutosText = "Te quedan: " + u.getMinutos() + " minutos";
+            widgetNumTelf=u.getNum_telf();
         }else{
             widgetInternetText="Ocurrió un problema";
         }
@@ -56,6 +58,7 @@ public class NewAppWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
         views.setTextViewText(R.id.internet_widget, widgetInternetText);
         views.setTextViewText(R.id.minutos_widget, widgetMinutosText);
+        views.setTextViewText(R.id.num_telf_widget, widgetNumTelf);
 
 
         //Create an Intent with the AppWidgetManager.ACTION_APPWIDGET_UPDATE action//

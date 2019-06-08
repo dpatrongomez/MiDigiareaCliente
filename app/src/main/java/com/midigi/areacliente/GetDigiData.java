@@ -75,6 +75,8 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
     public Usuario crearUsuarioPrepago(String response){
         String internet="";
         String minutos="";
+        String saldo="";
+        String num_telf="";
         Pattern p= Pattern.compile("<strong>(.+?)</strong> MB\n" +
                 "\t\t\t\t\t\t<br>");
         Matcher m=p.matcher(response);
@@ -88,13 +90,30 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
             minutos=m.group();
             minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
         }
-        Usuario u=new Usuario(internet,minutos);
+        p=Pattern.compile("<strong>(.+?)€</strong>");
+        m=p.matcher(response);
+        if(m.find()){
+            saldo=m.group();
+            saldo=saldo.substring(saldo.indexOf(">")+1,saldo.lastIndexOf("€"));
+        }
+        p=Pattern.compile("Número:\n" +
+                "\t\t\t\t\t\t\t</div>\n" +
+                "\t\t\t\t\t\t\t<div class=\"col-xs-7\">\n" +
+                "\t\t\t\t\t\t\t\t<span class=\"lead\"><strong>(.+?)</strong>");
+        m=p.matcher(response);
+        if(m.find()){
+            num_telf=m.group();
+            num_telf=num_telf.substring(num_telf.indexOf("strong>")+7,num_telf.lastIndexOf("</strong>"));
+        }
+        Usuario u=new Usuario(internet,minutos,saldo,num_telf);
         return u;
     }
 
     public Usuario crearUsuarioContrato(String response){
         String internet="";
         String minutos="";
+        String consumo="";
+        String num_telf="";
         Pattern p=Pattern.compile("<strong>(.+?) MB</strong> para navegar");
        Matcher m=p.matcher(response);
         if(m.find()){
@@ -107,7 +126,7 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
             minutos=m.group();
             minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos"));
         }
-        Usuario u=new Usuario(internet,minutos);
+        Usuario u=new Usuario(internet,minutos,consumo,num_telf);
         return u;
     }
 
