@@ -32,6 +32,7 @@ public class NewAppWidget extends AppWidgetProvider {
         CharSequence widgetInternetText="";
         CharSequence widgetMinutosText="";
         CharSequence widgetNumTelf="";
+        CharSequence widgetEuros="";
 
     if(new Digi().isNetwork(context)) {
         GetDigiData g = new GetDigiData();
@@ -44,9 +45,14 @@ public class NewAppWidget extends AppWidgetProvider {
             e.printStackTrace();
         }
         if(u.getInternet()!=null && u.getMinutos()!=null) {
-            widgetInternetText = "Te quedan: " + u.getInternet() + " MB";
-            widgetMinutosText = "Te quedan: " + u.getMinutos() + " minutos";
+            widgetInternetText =  u.getInternet();
+            widgetMinutosText = u.getMinutos()+" ";
             widgetNumTelf=u.getNum_telf();
+            if(u.getTipo_usuario().equals("Prepago")) {
+                widgetEuros = "Saldo: "+u.getEuros() + "€";
+            }else{
+                widgetEuros = "Consumo: "+u.getEuros() + "€";
+            }
         }else{
             widgetInternetText="Ocurrió un problema";
         }
@@ -59,6 +65,7 @@ public class NewAppWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.internet_widget, widgetInternetText);
         views.setTextViewText(R.id.minutos_widget, widgetMinutosText);
         views.setTextViewText(R.id.num_telf_widget, widgetNumTelf);
+        views.setTextViewText(R.id.euros_widget, widgetEuros);
 
 
         //Create an Intent with the AppWidgetManager.ACTION_APPWIDGET_UPDATE action//

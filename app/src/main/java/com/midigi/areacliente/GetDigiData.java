@@ -73,6 +73,7 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
     }
 
     public Usuario crearUsuarioPrepago(String response){
+        String tipo_usuario="Prepago";
         String internet="";
         String minutos="";
         String saldo="";
@@ -105,11 +106,12 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
             num_telf=m.group();
             num_telf=num_telf.substring(num_telf.indexOf("strong>")+7,num_telf.lastIndexOf("</strong>"));
         }
-        Usuario u=new Usuario(internet,minutos,saldo,num_telf);
+        Usuario u=new Usuario(tipo_usuario,internet,minutos,saldo,num_telf);
         return u;
     }
 
     public Usuario crearUsuarioContrato(String response){
+        String tipo_usuario="Contrato";
         String internet="";
         String minutos="";
         String consumo="";
@@ -126,7 +128,7 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
             minutos=m.group();
             minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos"));
         }
-        Usuario u=new Usuario(internet,minutos,consumo,num_telf);
+        Usuario u=new Usuario(tipo_usuario,internet,minutos,consumo,num_telf);
         return u;
     }
 

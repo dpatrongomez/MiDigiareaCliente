@@ -23,12 +23,12 @@
             android:padding="8dp"
             android:gravity="left"
             >
-        <ImageView
-            android:layout_height="50dp"
-            android:layout_width="50dp"
-            android:src="@drawable/area_digi"
+            <ImageView
+                android:layout_height="50dp"
+                android:layout_width="50dp"
+                android:src="@drawable/area_digi"
 
-            />
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -48,9 +48,9 @@
 
                 android:contentDescription="descripcion"
                 android:text=""
-                android:textColor="#09C"
-                android:textSize="20sp"
-                android:textStyle="bold|italic"
+                android:textColor="#027FA8"
+                android:textSize="22sp"
+                android:textStyle="bold"
                 />
         </LinearLayout>
 
@@ -64,11 +64,11 @@
 
             >
 
-        <Button
-            android:id="@+id/refrescarWidget"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/update" />
+            <Button
+                android:id="@+id/refrescarWidget"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@drawable/update" />
 
         </LinearLayout>
     </LinearLayout>
@@ -90,9 +90,22 @@
             android:contentDescription="descripcion"
             android:text=""
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textStyle="bold|italic"
-             />
+            />
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+
+            android:contentDescription="descripcion"
+            android:text="MB"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            />
 
 
     </LinearLayout>
@@ -103,8 +116,6 @@
         android:gravity="center_horizontal"
         android:background="#09C"
         >
-
-
         <TextView
             android:id="@+id/minutos_widget"
             android:layout_width="wrap_content"
@@ -114,12 +125,46 @@
             android:contentDescription="descripcion"
             android:text=""
             android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold|italic"
+
+            tools:visibility="visible" />
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+
+            android:contentDescription="descripcion"
+            android:text="minutos"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+
+        >
+
+
+        <TextView
+            android:id="@+id/euros_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+
+            android:contentDescription="descripcion"
+            android:text=""
+            android:textColor="#09C"
             android:textSize="20sp"
             android:textStyle="bold|italic"
 
             tools:visibility="visible" />
     </LinearLayout>
-
 
 
 </LinearLayout>
