@@ -6,13 +6,15 @@ public class Usuario {
     private String minutos;
     private String euros;
     private String num_telf;
+    private String fecha_renovacion;
 
-    public Usuario(String tipo_usuario,String internet, String minutos, String euros, String num_telf) {
+    public Usuario(String tipo_usuario,String internet, String minutos, String euros, String num_telf, String fecha_renovacion) {
         this.tipo_usuario=tipo_usuario;
         this.internet = internet;
         this.minutos = minutos;
         this.euros=euros;
         this.num_telf=num_telf;
+        this.fecha_renovacion=fecha_renovacion;
     }
 
     public String getTipo_usuario() {
@@ -33,5 +35,9 @@ public class Usuario {
 
     public String getMinutos() {
         return minutos;
+    }
+
+    public String getFecha_renovacion() {
+        return fecha_renovacion;
     }
 }

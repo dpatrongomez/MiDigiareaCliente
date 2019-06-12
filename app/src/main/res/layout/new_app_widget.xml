@@ -50,7 +50,20 @@
                 android:text=""
                 android:textColor="#027FA8"
                 android:textSize="22sp"
-                android:textStyle="bold"
+                android:textStyle="italic|bold"
+                />
+            <TextView
+                android:id="@+id/fecha_widget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+
+
+                android:contentDescription="descripcion"
+                android:text="Hasta: "
+                android:textColor="#027FA8"
+                android:textSize="14sp"
+                android:textStyle="italic"
                 />
         </LinearLayout>
 
@@ -155,7 +168,7 @@
             android:id="@+id/euros_widget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="3dp"
+            android:paddingTop="6dp"
 
             android:contentDescription="descripcion"
             android:text=""

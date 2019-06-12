@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.widget.Button;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -33,6 +34,8 @@ public class NewAppWidget extends AppWidgetProvider {
         CharSequence widgetMinutosText="";
         CharSequence widgetNumTelf="";
         CharSequence widgetEuros="";
+        CharSequence widgetFechaRenovacion="";
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
 
     if(new Digi().isNetwork(context)) {
         GetDigiData g = new GetDigiData();
@@ -44,30 +47,29 @@ public class NewAppWidget extends AppWidgetProvider {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        if(u.getInternet()!=null && u.getMinutos()!=null) {
-            widgetInternetText =  u.getInternet();
-            widgetMinutosText = u.getMinutos()+" ";
-            widgetNumTelf=u.getNum_telf();
-            if(u.getTipo_usuario().equals("Prepago")) {
-                widgetEuros = "Saldo: "+u.getEuros() + "€";
-            }else{
-                widgetEuros = "Consumo: "+u.getEuros() + "€";
+        if (u.getInternet() != null && u.getMinutos() != null) {
+            widgetInternetText = u.getInternet();
+            widgetFechaRenovacion = "Hasta: " + u.getFecha_renovacion();
+            widgetMinutosText = u.getMinutos() + " ";
+            widgetNumTelf = u.getNum_telf();
+            if (u.getTipo_usuario().equals("Prepago")) {
+                widgetEuros = "Saldo: " + u.getEuros() + "€";
+            } else {
+                widgetEuros = "Consumo: " + u.getEuros() + "€";
             }
-        }else{
-            widgetInternetText="Ocurrió un problema";
+        } else {
+            widgetInternetText = "Ocurrió un problema";
         }
-    }else{
-        widgetInternetText = "Sin conexión a internet";
-        widgetMinutosText = "";
-    }
+
         // Construct the RemoteViews object*/
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
+
         views.setTextViewText(R.id.internet_widget, widgetInternetText);
         views.setTextViewText(R.id.minutos_widget, widgetMinutosText);
         views.setTextViewText(R.id.num_telf_widget, widgetNumTelf);
         views.setTextViewText(R.id.euros_widget, widgetEuros);
+        views.setTextViewText(R.id.fecha_widget, widgetFechaRenovacion);
 
-
+    }
         //Create an Intent with the AppWidgetManager.ACTION_APPWIDGET_UPDATE action//
 
         Intent intentUpdate = new Intent(context, NewAppWidget.class);
@@ -102,7 +104,7 @@ public class NewAppWidget extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
-            Toast.makeText(context, "Consumo actualizado", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Consumo actualizado", Toast.LENGTH_SHORT).show();
         }
 
     }

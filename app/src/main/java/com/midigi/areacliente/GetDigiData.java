@@ -2,6 +2,8 @@ package com.midigi.areacliente;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.midigi.areacliente.modelo.Usuario;
@@ -15,6 +17,8 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +31,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
+
 
     @Override
     protected Usuario doInBackground(Context... contexts) {
@@ -74,10 +79,11 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
 
     public Usuario crearUsuarioPrepago(String response){
         String tipo_usuario="Prepago";
-        String internet="";
-        String minutos="";
-        String saldo="";
+        String internet="-";
+        String minutos="-";
+        String saldo="-";
         String num_telf="";
+        String fecha_renovacion="-";
         Pattern p= Pattern.compile("<strong>(.+?)</strong> MB\n" +
                 "\t\t\t\t\t\t<br>");
         Matcher m=p.matcher(response);
@@ -106,16 +112,24 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
             num_telf=m.group();
             num_telf=num_telf.substring(num_telf.indexOf("strong>")+7,num_telf.lastIndexOf("</strong>"));
         }
-        Usuario u=new Usuario(tipo_usuario,internet,minutos,saldo,num_telf);
+        p=Pattern.compile("Hasta el (.+?) a las");
+        m=p.matcher(response);
+        if(m.find()){
+            fecha_renovacion=m.group();
+            fecha_renovacion=fecha_renovacion.substring(fecha_renovacion.indexOf("el")+3,fecha_renovacion.indexOf("a las")-1);
+        }
+        Usuario u=new Usuario(tipo_usuario,internet,minutos,saldo,num_telf,fecha_renovacion);
         return u;
     }
 
+
     public Usuario crearUsuarioContrato(String response){
         String tipo_usuario="Contrato";
-        String internet="";
-        String minutos="";
-        String consumo="";
+        String internet="-";
+        String minutos="-";
+        String consumo="-";
         String num_telf="";
+        String fecha_renovacion="-";
         Pattern p=Pattern.compile("<strong>(.+?) MB</strong> para navegar");
        Matcher m=p.matcher(response);
         if(m.find()){
@@ -128,8 +142,55 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
             minutos=m.group();
             minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos"));
         }
-        Usuario u=new Usuario(tipo_usuario,internet,minutos,consumo,num_telf);
+        p=Pattern.compile("Consumo actual:\n" +
+                "\t\t\t\t\t\t\t</div>\n" +
+                "\t\t\t\t\t\t\t<div class=\"col-xs-7 lead\">\n" +
+                "\t\t\t\t\t\t\t\t<strong>(.+?)€</strong>");
+        m=p.matcher(response);
+        if(m.find()){
+            consumo=m.group();
+            consumo=consumo.substring(consumo.indexOf("strong>")+7,consumo.lastIndexOf("€"));
+        }
+        p=Pattern.compile("Número:\n" +
+                "\t\t\t\t\t\t\t</div>\n" +
+                "\t\t\t\t\t\t\t<div class=\"col-xs-7\">\n" +
+                "\t\t\t\t\t\t\t\t<span class=\"lead\"><strong>(.+?)</strong></span>");
+        m=p.matcher(response);
+        if(m.find()){
+            num_telf=m.group();
+            num_telf=num_telf.substring(num_telf.indexOf("strong>")+7,num_telf.lastIndexOf("</strong>"));
+        }
+        p=Pattern.compile("<p>Válidos hasta el próximo día (.+?).</p>");
+        m=p.matcher(response);
+        if(m.find()){
+            fecha_renovacion=m.group();
+            fecha_renovacion=fecha_renovacion.substring(fecha_renovacion.indexOf("día")+4,fecha_renovacion.lastIndexOf("."));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                fecha_renovacion=getFechaContrato(fecha_renovacion);
+            }
+
+        }
+        Usuario u=new Usuario(tipo_usuario,internet,minutos,consumo,num_telf,fecha_renovacion);
         return u;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getFechaContrato(String fecha_renovacion){
+        LocalDate fecha=LocalDate.now();
+        int dia_renovacion;
+        try{
+            dia_renovacion=Integer.parseInt(fecha_renovacion);
+        }catch (Exception e){
+            dia_renovacion=0;
+        }
+        if(fecha.getDayOfMonth()>dia_renovacion){
+            fecha.plusMonths(1);
+            fecha= LocalDate.of(LocalDate.now().getYear(),fecha.getMonthValue(),dia_renovacion);
+        }else{
+            fecha= LocalDate.of(LocalDate.now().getYear(),fecha.getMonthValue(),dia_renovacion);
+        }
+        fecha_renovacion=fecha.format(DateTimeFormatter.ofPattern("dd/MM"));
+        return fecha_renovacion;
     }
 
 
