@@ -7,10 +7,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.midigi.areacliente.servicios.Digi;
-
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import com.midigi.areacliente.utils.GestionarPreferences;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if (GestionarPreferences.getPrefSaltarInicio(this)){
+        if (GestionarPreferences.getPrefSaltarInicio(this) && GestionarPreferences.getUsuario(this)!=null && GestionarPreferences.getContraseña(this)!=null){
             Intent i = new Intent(MainActivity.this, AreaClienteActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);

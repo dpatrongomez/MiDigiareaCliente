@@ -1,7 +1,9 @@
-package com.midigi.areacliente;
+package com.midigi.areacliente.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.securepreferences.SecurePreferences;
 
 public class GestionarPreferences {
 
@@ -14,39 +16,33 @@ public class GestionarPreferences {
 
         //metodo que guarda las preferencias de la checkbox
         public static void guardarUsuario(String nombre_usuario , Context context) {
-
-            SharedPreferences sharedPreferences = context.getSharedPreferences(NOMBRE_FICHERO, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
+            SharedPreferences preferences=new SecurePreferences(context);
+            SecurePreferences.Editor editor=((SecurePreferences) preferences).edit();
             editor.putString(USUARIO, nombre_usuario);
             editor.commit();
         }
 
         //metodo que recupera las preferencias de la checkbox
         public static String getUsuario(Context context){
-
             String valor = "";
-
-            SharedPreferences sharedPreferences = context.getSharedPreferences(NOMBRE_FICHERO, Context.MODE_PRIVATE);
-            valor = sharedPreferences.getString(USUARIO,null);
+            SharedPreferences preferences=new SecurePreferences(context);
+            valor=preferences.getString(USUARIO,null);
 
             return valor;
         }
 
     public static void guardarContraseña(String contraseña , Context context) {
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences(NOMBRE_FICHERO, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences preferences=new SecurePreferences(context);
+        SecurePreferences.Editor editor=((SecurePreferences) preferences).edit();
         editor.putString(CONTRASEÑA, contraseña);
         editor.commit();
     }
 
         //metodo que recupera las preferencias de la checkbox
         public static String getContraseña(Context context){
-
             String valor = "";
-
-            SharedPreferences sharedPreferences = context.getSharedPreferences(NOMBRE_FICHERO, Context.MODE_PRIVATE);
-            valor = sharedPreferences.getString(CONTRASEÑA,null);
+            SharedPreferences preferences=new SecurePreferences(context);
+            valor=preferences.getString(CONTRASEÑA,null);
 
             return valor;
         }

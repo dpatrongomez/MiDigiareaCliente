@@ -1,4 +1,4 @@
-package com.midigi.areacliente;
+package com.midigi.areacliente.servicios;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -7,19 +7,12 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.midigi.areacliente.modelo.Usuario;
+import com.midigi.areacliente.utils.GestionarPreferences;
+import com.midigi.areacliente.utils.MyCookieJar;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +29,7 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
     @Override
     protected Usuario doInBackground(Context... contexts) {
         Log.d("stop","doinbeackground");
-        String usuario=GestionarPreferences.getUsuario(contexts[0]);
+        String usuario= GestionarPreferences.getUsuario(contexts[0]);
         String pass=GestionarPreferences.getContraseña(contexts[0]);
     CookieJar mycookies=new MyCookieJar();
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(mycookies).build();

@@ -5,15 +5,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.RemoteViews;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.PersistentCookieStore;
-import com.loopj.android.http.RequestParams;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import cz.msebera.android.httpclient.Header;
+
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

@@ -1,4 +1,4 @@
-package com.midigi.areacliente;
+package com.midigi.areacliente.utils;
 
 import org.jetbrains.annotations.NotNull;
 

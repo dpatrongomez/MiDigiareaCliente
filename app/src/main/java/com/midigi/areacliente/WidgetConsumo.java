@@ -3,25 +3,21 @@ package com.midigi.areacliente;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.widget.Button;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.midigi.areacliente.modelo.Usuario;
 import com.midigi.areacliente.servicios.Digi;
+import com.midigi.areacliente.servicios.GetDigiData;
+import com.midigi.areacliente.utils.GestionarPreferences;
 
 import java.util.concurrent.ExecutionException;
 
 /**
  * Implementation of App Widget functionality.
  */
-public class NewAppWidget extends AppWidgetProvider {
+public class WidgetConsumo extends AppWidgetProvider {
 
 
 
@@ -38,27 +34,31 @@ public class NewAppWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
 
     if(new Digi().isNetwork(context)) {
-        GetDigiData g = new GetDigiData();
-        Usuario u = null;
-        try {
-            u = g.execute(context).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        if (u.getInternet() != null && u.getMinutos() != null) {
-            widgetInternetText = u.getInternet();
-            widgetFechaRenovacion = "Hasta: " + u.getFecha_renovacion();
-            widgetMinutosText = u.getMinutos() + " ";
-            widgetNumTelf = u.getNum_telf();
-            if (u.getTipo_usuario().equals("Prepago")) {
-                widgetEuros = "Saldo: " + u.getEuros() + "€";
-            } else {
-                widgetEuros = "Consumo: " + u.getEuros() + "€";
+        if(GestionarPreferences.getUsuario(context)!=null && GestionarPreferences.getContraseña(context)!=null) {
+            GetDigiData getDigiData = new GetDigiData();
+            Usuario usuario = null;
+            try {
+                usuario = getDigiData.execute(context).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
-        } else {
-            widgetInternetText = "Ocurrió un problema";
+            if (usuario.getInternet() != null && usuario.getMinutos() != null) {
+                widgetInternetText = usuario.getInternet();
+                widgetFechaRenovacion = "Hasta: " + usuario.getFecha_renovacion();
+                widgetMinutosText = usuario.getMinutos() + " ";
+                widgetNumTelf = usuario.getNum_telf();
+                if (usuario.getTipo_usuario().equals("Prepago")) {
+                    widgetEuros = "Saldo: " + usuario.getEuros() + "€";
+                } else {
+                    widgetEuros = "Consumo: " + usuario.getEuros() + "€";
+                }
+            } else {
+                widgetInternetText = "Ocurrió un problema";
+            }
+        }else{
+            widgetNumTelf="Inicia sesión";
         }
 
         // Construct the RemoteViews object*/
@@ -72,7 +72,7 @@ public class NewAppWidget extends AppWidgetProvider {
     }
         //Create an Intent with the AppWidgetManager.ACTION_APPWIDGET_UPDATE action//
 
-        Intent intentUpdate = new Intent(context, NewAppWidget.class);
+        Intent intentUpdate = new Intent(context, WidgetConsumo.class);
         intentUpdate.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
 //Update the current widget instance only, by creating an array that contains the widget’s unique ID//
