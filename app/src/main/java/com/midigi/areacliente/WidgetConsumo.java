@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.midigi.areacliente.modelo.Usuario;
+import com.midigi.areacliente.modelo.UserData;
 import com.midigi.areacliente.servicios.Digi;
 import com.midigi.areacliente.servicios.GetDigiData;
 import com.midigi.areacliente.utils.GestionarPreferences;
@@ -36,23 +36,23 @@ public class WidgetConsumo extends AppWidgetProvider {
     if(new Digi().isNetwork(context)) {
         if(GestionarPreferences.getUsuario(context)!=null && GestionarPreferences.getContraseña(context)!=null) {
             GetDigiData getDigiData = new GetDigiData();
-            Usuario usuario = null;
+            UserData userData = null;
             try {
-                usuario = getDigiData.execute(context).get();
+                userData = getDigiData.execute(context).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            if (usuario.getInternet() != null && usuario.getMinutos() != null) {
-                widgetInternetText = usuario.getInternet();
-                widgetFechaRenovacion = "Hasta: " + usuario.getFecha_renovacion();
-                widgetMinutosText = usuario.getMinutos() + " ";
-                widgetNumTelf = usuario.getNum_telf();
-                if (usuario.getTipo_usuario().equals("Prepago")) {
-                    widgetEuros = "Saldo: " + usuario.getEuros() + "€";
+            if (userData.getInternet() != null && userData.getMinutos() != null) {
+                widgetInternetText = userData.getInternet();
+                widgetFechaRenovacion = "Hasta: " + userData.getFecha_renovacion();
+                widgetMinutosText = userData.getMinutos() + " ";
+                widgetNumTelf = userData.getNum_telf();
+                if (userData.getTipo_usuario().equals("Prepago")) {
+                    widgetEuros = "Saldo: " + userData.getEuros() + "€";
                 } else {
-                    widgetEuros = "Consumo: " + usuario.getEuros() + "€";
+                    widgetEuros = "Consumo: " + userData.getEuros() + "€";
                 }
             } else {
                 widgetInternetText = "Ocurrió un problema";

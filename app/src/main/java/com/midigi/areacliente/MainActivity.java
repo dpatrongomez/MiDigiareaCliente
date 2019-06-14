@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+import com.midigi.areacliente.modelo.Usuario;
 import com.midigi.areacliente.utils.GestionarPreferences;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         EditText caja_pass=findViewById(R.id.password);
         String usuario=caja_user.getText().toString();
         String password=caja_pass.getText().toString();
+        /*Usuario usuario_actual=new Usuario(usuario,password);
+        Gson g=new Gson();
+        g.toJson(usuario_actual);*/
         GestionarPreferences.guardarUsuario(usuario,this);
         GestionarPreferences.guardarContraseña(password,this);
         Intent i = new Intent(MainActivity.this, AreaClienteActivity.class);

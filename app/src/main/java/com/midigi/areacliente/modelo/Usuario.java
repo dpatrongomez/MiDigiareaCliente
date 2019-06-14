@@ -1,43 +1,30 @@
 package com.midigi.areacliente.modelo;
 
 public class Usuario {
-    String tipo_usuario;
-    private String internet;
-    private String minutos;
-    private String euros;
-    private String num_telf;
-    private String fecha_renovacion;
+    private String telefono;
+    private String contraseña;
 
-    public Usuario(String tipo_usuario,String internet, String minutos, String euros, String num_telf, String fecha_renovacion) {
-        this.tipo_usuario=tipo_usuario;
-        this.internet = internet;
-        this.minutos = minutos;
-        this.euros=euros;
-        this.num_telf=num_telf;
-        this.fecha_renovacion=fecha_renovacion;
+    public Usuario(String telefono, String contraseña) {
+        this.telefono = telefono;
+        this.contraseña = contraseña;
     }
 
-    public String getTipo_usuario() {
-        return tipo_usuario;
+    public Usuario() {
     }
 
-    public String getEuros() {
-        return euros;
+    public String getTelefono() {
+        return telefono;
     }
 
-    public String getNum_telf() {
-        return num_telf;
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
-    public String getInternet() {
-        return internet;
+    public String getContraseña() {
+        return contraseña;
     }
 
-    public String getMinutos() {
-        return minutos;
-    }
-
-    public String getFecha_renovacion() {
-        return fecha_renovacion;
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
     }
 }

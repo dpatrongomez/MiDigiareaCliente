@@ -6,7 +6,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import com.midigi.areacliente.modelo.Usuario;
+import com.midigi.areacliente.modelo.UserData;
 import com.midigi.areacliente.utils.GestionarPreferences;
 import com.midigi.areacliente.utils.MyCookieJar;
 
@@ -23,11 +23,11 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
+public class GetDigiData extends AsyncTask<Context,Void, UserData> {
 
 
     @Override
-    protected Usuario doInBackground(Context... contexts) {
+    protected UserData doInBackground(Context... contexts) {
         Log.d("stop","doinbeackground");
         String usuario= GestionarPreferences.getUsuario(contexts[0]);
         String pass=GestionarPreferences.getContraseña(contexts[0]);
@@ -57,7 +57,7 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Usuario u=null;
+        UserData u=null;
         if(respuesta.contains("Contrato")){
             u=crearUsuarioContrato(respuesta);
         }else{
@@ -70,7 +70,7 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
         return u;
     }
 
-    public Usuario crearUsuarioPrepago(String response){
+    public UserData crearUsuarioPrepago(String response){
         String tipo_usuario="Prepago";
         String internet="-";
         String minutos="-";
@@ -111,12 +111,12 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
             fecha_renovacion=m.group();
             fecha_renovacion=fecha_renovacion.substring(fecha_renovacion.indexOf("el")+3,fecha_renovacion.indexOf("a las")-1);
         }
-        Usuario u=new Usuario(tipo_usuario,internet,minutos,saldo,num_telf,fecha_renovacion);
+        UserData u=new UserData(tipo_usuario,internet,minutos,saldo,num_telf,fecha_renovacion);
         return u;
     }
 
 
-    public Usuario crearUsuarioContrato(String response){
+    public UserData crearUsuarioContrato(String response){
         String tipo_usuario="Contrato";
         String internet="-";
         String minutos="-";
@@ -163,7 +163,7 @@ public class GetDigiData extends AsyncTask<Context,Void,Usuario> {
             }
 
         }
-        Usuario u=new Usuario(tipo_usuario,internet,minutos,consumo,num_telf,fecha_renovacion);
+        UserData u=new UserData(tipo_usuario,internet,minutos,consumo,num_telf,fecha_renovacion);
         return u;
     }
 
