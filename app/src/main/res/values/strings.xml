@@ -27,4 +27,5 @@ Las credenciales introducidas por los usuarios son almacenadas únicamente en su
         Asegúrate de que has iniciado sesión y a continuación añade el widget al escritorio, podrás ver los datos de tu línea sin tener
         que abrir la aplicación.
     </string>
+    <string name="configure">Selecciona que línea quieres mostrar</string>
 </resources>

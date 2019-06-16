@@ -3,12 +3,15 @@ package com.midigi.areacliente.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.midigi.areacliente.modelo.Usuario;
 import com.securepreferences.SecurePreferences;
 
 public class GestionarPreferences {
 
         public static final String NOMBRE_FICHERO = "usuario_preferences";
         public static final String USUARIO = "usuario";
+        public static final String USUARIO_WIDGET="usuario_widget";
         public static final String CONTRASEÑA = "contraseña";
         public static final String CLAVE_SALTAR_INTRO = "saltar_intro";
     public static final String CLAVE_SALTAR_MENSAJE = "saltar_mensaje";
@@ -31,6 +34,25 @@ public class GestionarPreferences {
             return valor;
         }
 
+    public static void guardarUsuarioWidget(Usuario usuario,int appWidget, Context context) {
+        SharedPreferences preferences=new SecurePreferences(context);
+        SecurePreferences.Editor editor=((SecurePreferences) preferences).edit();
+        Gson gson=new Gson();
+
+        editor.putString(USUARIO_WIDGET+appWidget, gson.toJson(usuario));
+        editor.commit();
+    }
+
+    public static Usuario getUsuarioWidget(Context context, int appWidget){
+        String valor = "";
+        SecurePreferences preferences=new SecurePreferences(context);
+        valor=preferences.getString(USUARIO_WIDGET+appWidget,null);
+        Gson gson=new Gson();
+        Usuario u=gson.fromJson(valor,Usuario.class);
+
+        return u;
+    }
+
     public static void guardarContraseña(String contraseña , Context context) {
         SharedPreferences preferences=new SecurePreferences(context);
         SecurePreferences.Editor editor=((SecurePreferences) preferences).edit();
@@ -46,6 +68,8 @@ public class GestionarPreferences {
 
             return valor;
         }
+
+
 
 
     public static void guardarPrefSaltarInicio(boolean activo , Context context) {

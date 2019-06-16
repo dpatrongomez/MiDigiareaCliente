@@ -7,6 +7,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.midigi.areacliente.modelo.UserData;
+import com.midigi.areacliente.modelo.Usuario;
 import com.midigi.areacliente.utils.GestionarPreferences;
 import com.midigi.areacliente.utils.MyCookieJar;
 
@@ -23,14 +24,14 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class GetDigiData extends AsyncTask<Context,Void, UserData> {
+public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
 
 
     @Override
-    protected UserData doInBackground(Context... contexts) {
+    protected UserData doInBackground(Usuario... usuarios) {
         Log.d("stop","doinbeackground");
-        String usuario= GestionarPreferences.getUsuario(contexts[0]);
-        String pass=GestionarPreferences.getContraseña(contexts[0]);
+        String usuario= usuarios[0].getTelefono();
+        String pass=usuarios[0].getContraseña();
     CookieJar mycookies=new MyCookieJar();
         OkHttpClient client = new OkHttpClient.Builder().cookieJar(mycookies).build();
 

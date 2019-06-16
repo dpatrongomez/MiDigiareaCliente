@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.midigi.areacliente.modelo.UserData;
+import com.midigi.areacliente.modelo.Usuario;
 import com.midigi.areacliente.servicios.Digi;
 import com.midigi.areacliente.servicios.GetDigiData;
 import com.midigi.areacliente.utils.GestionarPreferences;
@@ -16,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 /**
  * Implementation of App Widget functionality.
+ * App Widget Configuration implemented in {@link WidgetConfigurableConfigureActivity WidgetConfigurableConfigureActivity}
  */
 public class WidgetConsumo extends AppWidgetProvider {
 
@@ -37,8 +39,9 @@ public class WidgetConsumo extends AppWidgetProvider {
         if(GestionarPreferences.getUsuario(context)!=null && GestionarPreferences.getContraseña(context)!=null) {
             GetDigiData getDigiData = new GetDigiData();
             UserData userData = null;
+            Usuario u=GestionarPreferences.getUsuarioWidget(context,appWidgetId);
             try {
-                userData = getDigiData.execute(context).get();
+                userData = getDigiData.execute(u).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
