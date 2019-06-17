@@ -22,7 +22,7 @@ Las credenciales introducidas por los usuarios son almacenadas únicamente en su
         realizar el login de forma automática en el área web de Digi Mobil. El código fuente de la aplicación está disponible
         de forma pública en Github (gcuadrado).</string>
     <string name="appwidget_text">HOLA</string>
-    <string name="add_widget">Add widget</string>
+    <string name="add_widget">Añadir widget</string>
     <string name="mensaje_inicio">¡Prueba el nuevo widget de consumo!
         Asegúrate de que has iniciado sesión y a continuación añade el widget al escritorio, podrás ver los datos de tu línea sin tener
         que abrir la aplicación.

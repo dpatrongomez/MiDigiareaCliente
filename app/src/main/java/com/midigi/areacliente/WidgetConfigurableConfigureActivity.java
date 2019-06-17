@@ -82,9 +82,15 @@ public class WidgetConfigurableConfigureActivity extends Activity {
     }
 
     static void deleteTitlePref(Context context, int appWidgetId) {
-        SecurePreferences.Editor prefs = (SecurePreferences.Editor) context.getSharedPreferences(PREFS_NAME, 0).edit();
+        /*SecurePreferences.Editor prefs = (SecurePreferences.Editor) context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.remove(PREF_PREFIX_KEY + appWidgetId);
-        prefs.apply();
+        prefs.apply();*/
+
+        SharedPreferences preferences=new SecurePreferences(context);
+        SecurePreferences.Editor editor=((SecurePreferences) preferences).edit();
+        editor.remove(GestionarPreferences.USUARIO_WIDGET+appWidgetId);
+
+        editor.apply();
     }
 
     @Override
@@ -110,7 +116,6 @@ public class WidgetConfigurableConfigureActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 Object clickItemObj = adapterView.getAdapter().getItem(index);
                 GestionarPreferences.guardarUsuarioWidget((Usuario)clickItemObj,mAppWidgetId,WidgetConfigurableConfigureActivity.this);
-                Toast.makeText(WidgetConfigurableConfigureActivity.this, "You clicked " + clickItemObj.toString(), Toast.LENGTH_SHORT).show();
             }
         });
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
