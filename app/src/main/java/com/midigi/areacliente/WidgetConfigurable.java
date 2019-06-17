@@ -100,7 +100,7 @@ public class WidgetConfigurable extends AppWidgetProvider {
 
         //Create an Intent with the AppWidgetManager.ACTION_APPWIDGET_UPDATE action//
 
-       /* Intent intentUpdate = new Intent(context, WidgetConsumo.class);
+       /*
         //intentUpdate.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         intentUpdate.setAction(REFRESH_ACTION);
 
