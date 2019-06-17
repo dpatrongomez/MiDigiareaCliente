@@ -3,8 +3,8 @@
     android:configure="com.midigi.areacliente.WidgetConfigurableConfigureActivity"
     android:initialKeyguardLayout="@layout/widget_configurable"
     android:initialLayout="@layout/widget_configurable"
-    android:minWidth="250dp"
-    android:minHeight="110dp"
+    android:minWidth="@dimen/_200sdp"
+    android:minHeight="@dimen/_110sdp"
     android:previewImage="@drawable/widget_preview"
     android:updatePeriodMillis="3600000"
     android:widgetCategory="home_screen"></appwidget-provider>

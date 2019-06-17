@@ -178,8 +178,9 @@ public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
             dia_renovacion=0;
         }
         if(fecha.getDayOfMonth()>dia_renovacion){
-            fecha.plusMonths(1);
+
             fecha= LocalDate.of(LocalDate.now().getYear(),fecha.getMonthValue(),dia_renovacion);
+            fecha=fecha.plusMonths(1);
         }else{
             fecha= LocalDate.of(LocalDate.now().getYear(),fecha.getMonthValue(),dia_renovacion);
         }

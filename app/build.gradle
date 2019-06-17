@@ -6,8 +6,8 @@ android {
         applicationId "com.midigi.areacliente"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 6
-        versionName "3.1"
+        versionCode 7
+        versionName "3.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,6 +30,7 @@ dependencies {
     implementation 'com.scottyab:secure-preferences-lib:0.1.7'
     implementation 'com.squareup.okhttp3:okhttp:4.0.0-alpha02'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
 
 
 }
