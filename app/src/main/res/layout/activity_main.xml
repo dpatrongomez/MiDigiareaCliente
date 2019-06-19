@@ -70,6 +70,40 @@
             android:background="@color/colorAccent"
             android:textColor="#FFFFFF"
             android:onClick="acceso"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="85dp">
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/crear_cuenta"
+            android:text="Crear una cuenta"
+            android:background="@color/colorAccent"
+            android:textColor="#FFFFFF"
+            android:onClick="clickCrearCuenta"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/recordar_cotraseña"
+            android:text="Olvidé mi contraseña"
+            android:background="@color/colorAccent"
+            android:textColor="#FFFFFF"
+            android:onClick="clickRecordarContraseña"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

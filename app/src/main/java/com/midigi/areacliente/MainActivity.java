@@ -2,6 +2,7 @@ package com.midigi.areacliente;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -132,4 +133,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+    public void clickCrearCuenta(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://micuentadigi.digimobil.es/es/create-account-prepaid"));
+        startActivity(browserIntent);
+    }
+
+    public void clickRecordarContraseña(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://micuentadigi.digimobil.es/es/password-recovery"));
+        startActivity(browserIntent);
+    }
 }

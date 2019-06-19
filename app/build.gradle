@@ -1,19 +1,31 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        gonzalocuadrado {
+            storeFile file('C:\\Users\\yo_y_\\AndroidStudioProjects\\Clave Google Play.jks')
+            storePassword 'chocoskate1234'
+            keyAlias = 'gonzalocuadrado'
+            keyPassword 'chocoskate1234'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.midigi.areacliente"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 7
-        versionName "3.1.1"
+        versionCode 9
+        versionName "4.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.gonzalocuadrado
+        }
+        debug {
+            signingConfig signingConfigs.gonzalocuadrado
         }
     }
 }

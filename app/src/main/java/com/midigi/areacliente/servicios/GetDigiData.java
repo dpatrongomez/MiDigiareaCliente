@@ -134,7 +134,14 @@ public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
         m=p.matcher(response);
         if(m.find()){
             minutos=m.group();
-            minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos"));
+            minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
+        }else{
+            p=Pattern.compile("<strong>1942 minutos </strong> nacionales e internacionales");
+            m=p.matcher(response);
+            if(m.find()){
+                minutos=m.group();
+                minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
+            }
         }
         p=Pattern.compile("Consumo actual:\n" +
                 "\t\t\t\t\t\t\t</div>\n" +
