@@ -136,7 +136,7 @@ public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
             minutos=m.group();
             minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
         }else{
-            p=Pattern.compile("<strong>1942 minutos </strong> nacionales e internacionales");
+            p=Pattern.compile("<strong>(.+?) minutos </strong> nacionales e internacionales");
             m=p.matcher(response);
             if(m.find()){
                 minutos=m.group();

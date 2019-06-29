@@ -32,7 +32,7 @@ public class WidgetConfigurable extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
-        if (intent.getAction().equalsIgnoreCase(REFRESH_ACTION)) {
+        if (intent.getAction().equals(REFRESH_ACTION)) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, WidgetConfigurable.class));
