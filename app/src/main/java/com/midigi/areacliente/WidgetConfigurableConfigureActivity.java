@@ -9,11 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,7 +29,8 @@ public class WidgetConfigurableConfigureActivity extends Activity {
     private static final String PREFS_NAME = "com.midigi.areacliente.WidgetConfigurable";
     private static final String PREF_PREFIX_KEY = "appwidget_";
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    ListView a;
+    private ListView listViewUsuarios;
+    private GestionarPreferences gestionarPreferences;
 
 
 
@@ -62,29 +59,10 @@ public class WidgetConfigurableConfigureActivity extends Activity {
         super();
     }
 
-    // Write the prefix to the SharedPreferences object for this widget
-    static void saveTitlePref(Context context, int appWidgetId, String text) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putString(PREF_PREFIX_KEY + appWidgetId, text);
-        prefs.apply();
-    }
 
-    // Read the prefix from the SharedPreferences object for this widget.
-    // If there is no preference saved, get the default from a resource
-    static String loadTitlePref(Context context, int appWidgetId) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        String titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null);
-        if (titleValue != null) {
-            return titleValue;
-        } else {
-            return context.getString(R.string.appwidget_text);
-        }
-    }
 
     static void deleteTitlePref(Context context, int appWidgetId) {
-        /*SecurePreferences.Editor prefs = (SecurePreferences.Editor) context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.remove(PREF_PREFIX_KEY + appWidgetId);
-        prefs.apply();*/
+
 
         SharedPreferences preferences=new SecurePreferences(context);
         SecurePreferences.Editor editor=((SecurePreferences) preferences).edit();
@@ -99,23 +77,24 @@ public class WidgetConfigurableConfigureActivity extends Activity {
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
+        gestionarPreferences=gestionarPreferences.getPreferences();
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.widget_configurable_configure);
         //mAppWidgetText = (EditText) findViewById(R.id.appwidget_text);
 
-        a=(ListView) findViewById((R.id.lista_usuarios));
+        listViewUsuarios =(ListView) findViewById((R.id.lista_usuarios));
         Gson gson=new Gson();
-        LinkedHashMap<String, Usuario> lista_usuarios=gson.fromJson(GestionarPreferences.getUsuario(this), new TypeToken<LinkedHashMap<String,Usuario>>(){}.getType());
+        LinkedHashMap<String, Usuario> lista_usuarios=gestionarPreferences.getListaUsuarios(this);
         ;
         List<Usuario> h=new ArrayList<>(lista_usuarios.values());
         ArrayAdapter<Usuario> arrayAdapter = new ArrayAdapter<Usuario>(this, android.R.layout.simple_list_item_single_choice, h);
-        a.setAdapter(arrayAdapter);
-        a.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listViewUsuarios.setAdapter(arrayAdapter);
+        listViewUsuarios.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 Object clickItemObj = adapterView.getAdapter().getItem(index);
-                GestionarPreferences.guardarUsuarioWidget((Usuario)clickItemObj,mAppWidgetId,WidgetConfigurableConfigureActivity.this);
+                gestionarPreferences.guardarUsuarioWidget((Usuario)clickItemObj,mAppWidgetId,WidgetConfigurableConfigureActivity.this);
             }
         });
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);

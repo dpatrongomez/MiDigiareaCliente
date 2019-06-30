@@ -28,6 +28,7 @@ public class WidgetConfigurable extends AppWidgetProvider {
 
     public static String REFRESH_ACTION = "MyCustomUpdate";
 
+
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
@@ -47,17 +48,17 @@ public class WidgetConfigurable extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
+        GestionarPreferences gestionarPreferences=null;
+        gestionarPreferences=gestionarPreferences.getPreferences();
         CharSequence widgetInternetText = "";
         CharSequence widgetMinutosText = "";
         CharSequence widgetNumTelf = "";
         CharSequence widgetEuros = "";
         CharSequence widgetFechaRenovacion = "";
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
-        Usuario usuario = GestionarPreferences.getUsuarioWidget(context, appWidgetId);
+        Usuario usuario = gestionarPreferences.getUsuarioWidget(context, appWidgetId);
         Gson gson = new Gson();
-        LinkedHashMap<String, Usuario> lista_usuarios = gson.fromJson(GestionarPreferences.getUsuario(context), new TypeToken<LinkedHashMap<String, Usuario>>() {
-        }.getType());
+        LinkedHashMap<String, Usuario> lista_usuarios = gestionarPreferences.getListaUsuarios(context);
 
             if (new Digi().isNetwork(context)) {
                 if (usuario != null && lista_usuarios.get(usuario.getTelefono()) != null) {
@@ -98,26 +99,7 @@ public class WidgetConfigurable extends AppWidgetProvider {
 
             }
 
-        //Create an Intent with the AppWidgetManager.ACTION_APPWIDGET_UPDATE action//
 
-       /*
-        //intentUpdate.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        intentUpdate.setAction(REFRESH_ACTION);
-
-//Update the current widget instance only, by creating an array that contains the widget’s unique ID//
-
-        int[] idArray = new int[]{appWidgetId};
-        intentUpdate.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, idArray);
-
-//Wrap the intent as a PendingIntent, using PendingIntent.getBroadcast()//
-
-        PendingIntent pendingUpdate = PendingIntent.getBroadcast(
-                context, appWidgetId, intentUpdate,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-//Send the pending intent in response to the user tapping the ‘Update’ TextView//
-
-       // views.setOnClickPendingIntent(R.id.refrescarWidget, pendingUpdate);*/
         views.setOnClickPendingIntent(R.id.refrescarWidget, getPenIntent(context, appWidgetId));
 
 
@@ -151,6 +133,7 @@ public class WidgetConfigurable extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
+
     }
 
     @Override

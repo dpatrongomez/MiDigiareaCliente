@@ -18,21 +18,21 @@ import com.midigi.areacliente.servicios.CheckDigiUser;
 import com.midigi.areacliente.servicios.Digi;
 import com.midigi.areacliente.utils.GestionarPreferences;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
-    private Map<String,Usuario> lista_usuarios;
-    Gson gson;
+    private LinkedHashMap<String,Usuario> lista_usuarios;
+    private Gson gson;
+    private GestionarPreferences gestionarPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        gestionarPreferences=gestionarPreferences.getPreferences();
         gson=new Gson();
-        lista_usuarios=gson.fromJson(GestionarPreferences.getUsuario(this),  new TypeToken<LinkedHashMap<String,Usuario>>(){}.getType());
+        lista_usuarios=gestionarPreferences.getListaUsuarios(this);
     if(lista_usuarios!=null) {
-        if (GestionarPreferences.getPrefSaltarInicio(this) && lista_usuarios.size() > 0) {
+        if (gestionarPreferences.getPrefSaltarInicio(this) && lista_usuarios.size() > 0) {
 
             Intent i = new Intent(MainActivity.this, AreaClienteActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         CheckBox casilla_credenciales=findViewById(R.id.casilla_inicio);
         casilla_credenciales.setChecked(true);
         if (casilla_credenciales.isChecked()){
-            GestionarPreferences.guardarPrefSaltarInicio(casilla_credenciales.isChecked(), this);
+            gestionarPreferences.guardarPrefSaltarInicio(casilla_credenciales.isChecked(), this);
         }
 
 
@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 lista_usuarios.put(usuario_actual.getTelefono(), usuario_actual);
             }
 
-            GestionarPreferences.guardarUsuario(gson.toJson(lista_usuarios), this);
-        /*GestionarPreferences.guardarUsuario(usuario,this);
+            gestionarPreferences.guardarListaUsuarios(lista_usuarios, this);
+        /*GestionarPreferences.guardarListaUsuarios(usuario,this);
         GestionarPreferences.guardarContraseña(password,this);*/
             Intent i = new Intent(MainActivity.this, AreaClienteActivity.class);
             i.putExtra("Usuario", usuario_actual.getTelefono());
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     public void casilla_credenciales (View view){
         CheckBox casilla_credenciales=findViewById(R.id.casilla_inicio);
         if (view.getId()==R.id.casilla_inicio) {
-            GestionarPreferences.guardarPrefSaltarInicio(casilla_credenciales.isChecked(), this);
+            gestionarPreferences.guardarPrefSaltarInicio(casilla_credenciales.isChecked(), this);
         }
     }
 

@@ -4,37 +4,57 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.midigi.areacliente.modelo.Usuario;
 import com.securepreferences.SecurePreferences;
 
+import java.util.LinkedHashMap;
+
 public class GestionarPreferences {
 
+        private static GestionarPreferences preferencesInstance;
         public static final String NOMBRE_FICHERO = "usuario_preferences";
         public static final String USUARIO = "usuario";
         public static final String USUARIO_WIDGET="usuario_widget";
         public static final String CONTRASEÑA = "contraseña";
         public static final String CLAVE_SALTAR_INTRO = "saltar_intro";
     public static final String CLAVE_SALTAR_MENSAJE = "saltar_mensaje";
+    private Gson gson;
 
 
+        private GestionarPreferences(){
+            gson=new Gson();
+        }
+
+        public static GestionarPreferences getPreferences(){
+            if (preferencesInstance==null){
+                preferencesInstance=new GestionarPreferences();
+            }
+            return preferencesInstance;
+        }
         //metodo que guarda las preferencias de la checkbox
-        public static void guardarUsuario(String nombre_usuario , Context context) {
+        public  void guardarListaUsuarios(LinkedHashMap<String,Usuario> listaUsuarios , Context context) {
+            String jsonUsuario=gson.toJson(listaUsuarios);
             SharedPreferences preferences=new SecurePreferences(context);
             SecurePreferences.Editor editor=((SecurePreferences) preferences).edit();
-            editor.putString(USUARIO, nombre_usuario);
+            editor.putString(USUARIO, jsonUsuario);
             editor.commit();
+
+
         }
 
         //metodo que recupera las preferencias de la checkbox
-        public static String getUsuario(Context context){
+        public  LinkedHashMap<String,Usuario> getListaUsuarios(Context context){
+            LinkedHashMap<String,Usuario> listaUsuarios=null;
             String valor = "";
             SharedPreferences preferences=new SecurePreferences(context);
             valor=preferences.getString(USUARIO,null);
+            listaUsuarios=gson.fromJson(valor,new TypeToken<LinkedHashMap<String,Usuario>>(){}.getType());
 
-            return valor;
+            return listaUsuarios;
         }
 
-    public static void guardarUsuarioWidget(Usuario usuario,int appWidget, Context context) {
+    public void guardarUsuarioWidget(Usuario usuario,int appWidget, Context context) {
         SharedPreferences preferences=new SecurePreferences(context);
         SecurePreferences.Editor editor=((SecurePreferences) preferences).edit();
         Gson gson=new Gson();
@@ -43,7 +63,7 @@ public class GestionarPreferences {
         editor.commit();
     }
 
-    public static Usuario getUsuarioWidget(Context context, int appWidget){
+    public Usuario getUsuarioWidget(Context context, int appWidget){
         String valor = "";
         SecurePreferences preferences=new SecurePreferences(context);
         valor=preferences.getString(USUARIO_WIDGET+appWidget,null);
@@ -53,7 +73,7 @@ public class GestionarPreferences {
         return u;
     }
 
-    public static void guardarContraseña(String contraseña , Context context) {
+    public void guardarContraseña(String contraseña , Context context) {
         SharedPreferences preferences=new SecurePreferences(context);
         SecurePreferences.Editor editor=((SecurePreferences) preferences).edit();
         editor.putString(CONTRASEÑA, contraseña);
@@ -61,7 +81,7 @@ public class GestionarPreferences {
     }
 
         //metodo que recupera las preferencias de la checkbox
-        public static String getContraseña(Context context){
+        public String getContraseña(Context context){
             String valor = "";
             SharedPreferences preferences=new SecurePreferences(context);
             valor=preferences.getString(CONTRASEÑA,null);
@@ -72,7 +92,7 @@ public class GestionarPreferences {
 
 
 
-    public static void guardarPrefSaltarInicio(boolean activo , Context context) {
+    public void guardarPrefSaltarInicio(boolean activo , Context context) {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(NOMBRE_FICHERO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -81,7 +101,7 @@ public class GestionarPreferences {
     }
 
     //metodo que recupera las preferencias de la checkbox
-    public static boolean getPrefSaltarInicio(Context context){
+    public boolean getPrefSaltarInicio(Context context){
 
         boolean valor = false;
 
@@ -91,7 +111,7 @@ public class GestionarPreferences {
         return valor;
     }
 
-    public static void guardarPrefSaltarMensaje(boolean activo , Context context) {
+    public void guardarPrefSaltarMensaje(boolean activo , Context context) {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(NOMBRE_FICHERO, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -100,7 +120,7 @@ public class GestionarPreferences {
     }
 
     //metodo que recupera las preferencias de la checkbox
-    public static boolean getPrefSaltarMensaje(Context context){
+    public boolean getPrefSaltarMensaje(Context context){
 
         boolean valor = false;
 
