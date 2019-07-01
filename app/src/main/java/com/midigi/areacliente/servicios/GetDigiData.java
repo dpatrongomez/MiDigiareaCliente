@@ -78,105 +78,105 @@ public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
         String saldo="-";
         String num_telf="";
         String fecha_renovacion="-";
-        Pattern p= Pattern.compile("<strong>(.+?)</strong> MB\n" +
-                "\t\t\t\t\t\t<br>");
-        Matcher m=p.matcher(response);
 
-        if(m.find()){
-            internet=m.group(1);
+        // SACAR LOS MEGAS RESTANTES
+       internet=encontrarDatos("<strong>(.+?)</strong> MB\n" +
+               "\t\t\t\t\t\t<br>",response);
+       if(internet!=null){
+           internet=internet.substring(internet.indexOf(">")+1,internet.lastIndexOf("</strong>"));
+       }
+
+       // SACAR LOS MINUTOS
+
+            minutos=encontrarDatos("<strong>(.+?) minutos nacionales </strong>",response);
+            if(minutos!=null) {
+                minutos = minutos.substring(minutos.indexOf(">") + 1, minutos.lastIndexOf("minutos") - 1);
+            }
+
+        // SACAR EL SALDO
+
+        saldo=encontrarDatos("<strong>(.+?)€</strong>",response);
+        if(saldo!=null) {
+            saldo = saldo.substring(saldo.indexOf(">") + 1, saldo.lastIndexOf("€"));
         }
-        p=Pattern.compile("<strong>(.+?) minutos nacionales </strong>");
-        m=p.matcher(response);
-        if(m.find()){
-            minutos=m.group();
-            minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
-        }
-        p=Pattern.compile("<strong>(.+?)€</strong>");
-        m=p.matcher(response);
-        if(m.find()){
-            saldo=m.group();
-            saldo=saldo.substring(saldo.indexOf(">")+1,saldo.lastIndexOf("€"));
-        }
-        p=Pattern.compile("Número:\n" +
+
+        // SACAR NÚMERO DE TELÉFONO
+        num_telf=encontrarDatos("Número:\n" +
                 "\t\t\t\t\t\t\t</div>\n" +
                 "\t\t\t\t\t\t\t<div class=\"col-xs-7\">\n" +
-                "\t\t\t\t\t\t\t\t<span class=\"lead\"><strong>(.+?)</strong>");
-        m=p.matcher(response);
-        if(m.find()){
-            num_telf=m.group();
+                "\t\t\t\t\t\t\t\t<span class=\"lead\"><strong>(.+?)</strong>",response);
+        if(num_telf!=null){
             num_telf=num_telf.substring(num_telf.indexOf("strong>")+7,num_telf.lastIndexOf("</strong>"));
         }
-        p=Pattern.compile("Hasta el (.+?) a las");
-        m=p.matcher(response);
-        if(m.find()){
-            fecha_renovacion=m.group();
+
+        // SACAR FECHA RENOVACIÓN
+        fecha_renovacion=encontrarDatos("Hasta el (.+?) a las",response);
+        if(fecha_renovacion!=null){
             fecha_renovacion=fecha_renovacion.substring(fecha_renovacion.indexOf("el")+3,fecha_renovacion.indexOf("a las")-1);
         }
+
         UserData u=new UserData(tipo_usuario,internet,minutos,saldo,num_telf,fecha_renovacion);
         return u;
     }
 
 
-    public UserData crearUsuarioContrato(String response){
+    private UserData crearUsuarioContrato(String response){
         String tipo_usuario="Contrato";
         String internet="-";
         String minutos="-";
         String consumo="-";
         String num_telf="";
         String fecha_renovacion="-";
-        Pattern p=Pattern.compile("<strong>(.+?) MB</strong> para navegar");
-       Matcher m=p.matcher(response);
-        if(m.find()){
-            internet=m.group();
-            internet=internet.substring(internet.indexOf(">")+1,internet.lastIndexOf("MB")-1);
-        }
-        p=Pattern.compile("<strong>(.+?) minutos nacionales </strong>");
-        m=p.matcher(response);
-        if(m.find()){
-            minutos=m.group();
-            minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
-        }else{
-            p=Pattern.compile("<strong>(.+?) minutos </strong> nacionales e internacionales");
-            m=p.matcher(response);
-            if(m.find()){
-                minutos=m.group();
-                minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
-            }
-        }
-        p=Pattern.compile("Consumo actual:\n" +
+
+        //SACAR MB DE INTERNET RESTANTES
+       internet=encontrarDatos("<strong>(.+?) MB</strong> para navegar",response);
+       if(internet!=null){
+           internet=internet.substring(internet.indexOf(">")+1,internet.lastIndexOf("MB")-1);
+       }
+
+       // SACAR MINUTOS
+        minutos=encontrarDatos("<strong>(.+?) minutos nacionales </strong>",response);
+       if(minutos!=null){
+           minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
+       }else{
+           minutos=encontrarDatos("<strong>(.+?) minutos </strong> nacionales e internacionales",response);
+           if(minutos!=null){
+               minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
+           }
+       }
+       // SACAR CONSUMO
+
+        consumo=encontrarDatos("Consumo actual:\n" +
                 "\t\t\t\t\t\t\t</div>\n" +
                 "\t\t\t\t\t\t\t<div class=\"col-xs-7 lead\">\n" +
-                "\t\t\t\t\t\t\t\t<strong>(.+?)€</strong>");
-        m=p.matcher(response);
-        if(m.find()){
-            consumo=m.group();
-            consumo=consumo.substring(consumo.indexOf("strong>")+7,consumo.lastIndexOf("€"));
-        }
-        p=Pattern.compile("Número:\n" +
+                "\t\t\t\t\t\t\t\t<strong>(.+?)€</strong>",response);
+       if(consumo!=null){
+           consumo=consumo.substring(consumo.indexOf("strong>")+7,consumo.lastIndexOf("€"));
+       }
+
+       //SACAR NÜMERO DE TELÉFONO
+        num_telf=encontrarDatos("Número:\n" +
                 "\t\t\t\t\t\t\t</div>\n" +
                 "\t\t\t\t\t\t\t<div class=\"col-xs-7\">\n" +
-                "\t\t\t\t\t\t\t\t<span class=\"lead\"><strong>(.+?)</strong></span>");
-        m=p.matcher(response);
-        if(m.find()){
-            num_telf=m.group();
-            num_telf=num_telf.substring(num_telf.indexOf("strong>")+7,num_telf.lastIndexOf("</strong>"));
-        }
-        p=Pattern.compile("<p>Válidos hasta el próximo día (.+?).</p>");
-        m=p.matcher(response);
-        if(m.find()){
-            fecha_renovacion=m.group();
-            fecha_renovacion=fecha_renovacion.substring(fecha_renovacion.indexOf("día")+4,fecha_renovacion.lastIndexOf("."));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                fecha_renovacion=getFechaContrato(fecha_renovacion);
-            }
+                "\t\t\t\t\t\t\t\t<span class=\"lead\"><strong>(.+?)</strong></span>",response);
+       if(num_telf!=null){
+           num_telf=num_telf.substring(num_telf.indexOf("strong>")+7,num_telf.lastIndexOf("</strong>"));
+       }
+       // SACAR FECHA DE RENOVACIÓN
+        fecha_renovacion=encontrarDatos("<p>Válidos hasta el próximo día (.+?).</p>",response);
+       if(fecha_renovacion!=null){
+           fecha_renovacion=fecha_renovacion.substring(fecha_renovacion.indexOf("día")+4,fecha_renovacion.lastIndexOf("."));
+           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+               fecha_renovacion=getFechaContrato(fecha_renovacion);
+           }
+       }
 
-        }
         UserData u=new UserData(tipo_usuario,internet,minutos,consumo,num_telf,fecha_renovacion);
         return u;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public String getFechaContrato(String fecha_renovacion){
+    private String getFechaContrato(String fecha_renovacion){
         LocalDate fecha=LocalDate.now();
         int dia_renovacion;
         try{
@@ -195,5 +195,15 @@ public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
         return fecha_renovacion;
     }
 
+    private String encontrarDatos(String textoBuscado,String texto){
+        String coincidencia=null;
+        Pattern p=Pattern.compile(textoBuscado);
+       Matcher m=p.matcher(texto);
+        if(m.find()){
+            coincidencia=m.group();
+
+        }
+        return coincidencia;
+    }
 
 }

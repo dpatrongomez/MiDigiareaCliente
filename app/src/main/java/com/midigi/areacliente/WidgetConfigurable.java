@@ -55,12 +55,15 @@ public class WidgetConfigurable extends AppWidgetProvider {
         CharSequence widgetNumTelf = "";
         CharSequence widgetEuros = "";
         CharSequence widgetFechaRenovacion = "";
+        CharSequence widgetMbGb = "";
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
         Usuario usuario = gestionarPreferences.getUsuarioWidget(context, appWidgetId);
         Gson gson = new Gson();
         LinkedHashMap<String, Usuario> lista_usuarios = gestionarPreferences.getListaUsuarios(context);
 
+        //SE COMPRUEBA SI HAY CONEXIÓN A INTERNET
             if (new Digi().isNetwork(context)) {
+                //SE COMPRUEBA QUE EL USUARIO DEL WIDGET SIGUE ESTANDO EN LA LISTA DE LA APP
                 if (usuario != null && lista_usuarios.get(usuario.getTelefono()) != null) {
                     GetDigiData getDigiData = new GetDigiData();
                     UserData userData = null;
@@ -73,18 +76,33 @@ public class WidgetConfigurable extends AppWidgetProvider {
                         e.printStackTrace();
                     }
                     if (userData.getInternet() != null && userData.getMinutos() != null) {
-                        widgetInternetText = userData.getInternet();
+
+                        try{
+                            double megasRestantes=Double.parseDouble(userData.getInternet());
+                            if(megasRestantes>=1024){
+                                widgetInternetText = megasRestantes/1024+"";
+                                widgetMbGb="GB";
+                            }else{
+                                widgetInternetText = (int)megasRestantes+"";
+                                widgetMbGb="MB";
+                            }
+                        }catch (Exception e){
+                            widgetInternetText = userData.getInternet();
+                            widgetMbGb="MB";
+                        }
                         widgetFechaRenovacion = "Hasta: " + userData.getFecha_renovacion();
-                        widgetMinutosText = userData.getMinutos() + " ";
+                        widgetMinutosText = userData.getMinutos();
                         widgetNumTelf = userData.getNum_telf();
                         if (userData.getTipo_usuario().equals("Prepago")) {
                             widgetEuros = "Saldo: " + userData.getEuros() + "€";
                         } else {
                             widgetEuros = "Consumo: " + userData.getEuros() + "€";
                         }
+                        // SI ALGÚN VALOR DEVUELVE NULL, SE INFORMA AL USUARIO
                     } else {
                         widgetInternetText = "Ocurrió un problema";
                     }
+                    //SI EL USUARIO YA NO ESTÁ EN LA LISTA DE LA APP, SE PIDE QUE INICIE SESIÓN
                 } else {
                     widgetNumTelf = "Inicia sesión";
                 }
@@ -96,6 +114,7 @@ public class WidgetConfigurable extends AppWidgetProvider {
                 views.setTextViewText(R.id.num_telf_widget, widgetNumTelf);
                 views.setTextViewText(R.id.euros_widget, widgetEuros);
                 views.setTextViewText(R.id.fecha_widget, widgetFechaRenovacion);
+                views.setTextViewText(R.id.megas_gigas, widgetMbGb);
 
             }
 
