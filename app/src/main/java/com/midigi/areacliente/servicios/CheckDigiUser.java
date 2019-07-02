@@ -37,6 +37,7 @@ public class CheckDigiUser extends AsyncTask<Usuario,Void,String> {
             respuesta= response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
+            respuesta="\"ok\"";
         }
         return respuesta;
     }

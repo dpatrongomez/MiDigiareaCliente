@@ -17,6 +17,7 @@ import com.midigi.areacliente.servicios.Digi;
 import com.midigi.areacliente.servicios.GetDigiData;
 import com.midigi.areacliente.utils.GestionarPreferences;
 
+import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -32,18 +33,19 @@ public class WidgetConfigurable extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+if(intent.getAction()!=null) {
+    if (intent.getAction().equals(REFRESH_ACTION)) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, WidgetConfigurable.class));
+        int appWidgetId = intent.getIntExtra("APP_WIDGET_ID", -1);
+        onUpdate(context, appWidgetManager, appWidgetIds);
 
-        if (intent.getAction().equals(REFRESH_ACTION)) {
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, WidgetConfigurable.class));
-            int appWidgetId = intent.getIntExtra("APP_WIDGET_ID", -1);
-            onUpdate(context, appWidgetManager, appWidgetIds);
 
-
-            Toast.makeText(context, "Consumo actualizado", Toast.LENGTH_SHORT).show();
-            //appWidgetManager.updateAppWidget(appWidgetIds, views);
-        }
+        Toast.makeText(context, "Consumo actualizado", Toast.LENGTH_SHORT).show();
+        //appWidgetManager.updateAppWidget(appWidgetIds, views);
+    }
+}
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
@@ -61,9 +63,7 @@ public class WidgetConfigurable extends AppWidgetProvider {
         Gson gson = new Gson();
         LinkedHashMap<String, Usuario> lista_usuarios = gestionarPreferences.getListaUsuarios(context);
 
-        //SE COMPRUEBA SI HAY CONEXIÓN A INTERNET
             if (new Digi().isNetwork(context)) {
-                //SE COMPRUEBA QUE EL USUARIO DEL WIDGET SIGUE ESTANDO EN LA LISTA DE LA APP
                 if (usuario != null && lista_usuarios.get(usuario.getTelefono()) != null) {
                     GetDigiData getDigiData = new GetDigiData();
                     UserData userData = null;
@@ -79,8 +79,9 @@ public class WidgetConfigurable extends AppWidgetProvider {
 
                         try{
                             double megasRestantes=Double.parseDouble(userData.getInternet());
-                            if(megasRestantes>=1024){
-                                widgetInternetText = megasRestantes/1024+"";
+                            if(megasRestantes>1024){
+                                DecimalFormat numberFormat = new DecimalFormat("#.00");
+                                widgetInternetText = numberFormat.format(megasRestantes/1024)+"";
                                 widgetMbGb="GB";
                             }else{
                                 widgetInternetText = (int)megasRestantes+"";
@@ -91,18 +92,16 @@ public class WidgetConfigurable extends AppWidgetProvider {
                             widgetMbGb="MB";
                         }
                         widgetFechaRenovacion = "Hasta: " + userData.getFecha_renovacion();
-                        widgetMinutosText = userData.getMinutos();
+                        widgetMinutosText = userData.getMinutos() + " ";
                         widgetNumTelf = userData.getNum_telf();
                         if (userData.getTipo_usuario().equals("Prepago")) {
                             widgetEuros = "Saldo: " + userData.getEuros() + "€";
                         } else {
                             widgetEuros = "Consumo: " + userData.getEuros() + "€";
                         }
-                        // SI ALGÚN VALOR DEVUELVE NULL, SE INFORMA AL USUARIO
                     } else {
                         widgetInternetText = "Ocurrió un problema";
                     }
-                    //SI EL USUARIO YA NO ESTÁ EN LA LISTA DE LA APP, SE PIDE QUE INICIE SESIÓN
                 } else {
                     widgetNumTelf = "Inicia sesión";
                 }
