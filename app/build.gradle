@@ -2,12 +2,8 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        gonzalocuadrado {
-            storeFile file('C:\\Users\\yo_y_\\AndroidStudioProjects\\Clave Google Play.jks')
-            storePassword 'chocoskate1234'
-            keyAlias = 'gonzalocuadrado'
-            keyPassword 'chocoskate1234'
-        }
+        
+       
     }
     compileSdkVersion 28
     defaultConfig {
