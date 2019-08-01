@@ -82,38 +82,32 @@ public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
         // SACAR LOS MEGAS RESTANTES
        internet=encontrarDatos("<strong>(.+?)</strong> MB\n" +
                "\t\t\t\t\t\t<br>",response);
-       if(internet!="-"){
-           internet=internet.substring(internet.indexOf(">")+1,internet.lastIndexOf("</strong>"));
-       }
+
 
        // SACAR LOS MINUTOS
 
             minutos=encontrarDatos("<strong>(.+?) minutos nacionales </strong>",response);
-            if(minutos!="-") {
-                minutos = minutos.substring(minutos.indexOf(">") + 1, minutos.lastIndexOf("minutos") - 1);
+            if(minutos.equals("-")) {
+                if(response.contains("Combo")){
+                    minutos=encontrarDatos("<strong>(.+?)</strong> minutos nacionales",response);
+                }
             }
 
         // SACAR EL SALDO
 
         saldo=encontrarDatos("<strong>(.+?)€</strong>",response);
-        if(saldo!=null) {
-            saldo = saldo.substring(saldo.indexOf(">") + 1, saldo.lastIndexOf("€"));
-        }
+
 
         // SACAR NÚMERO DE TELÉFONO
         num_telf=encontrarDatos("Número:\n" +
                 "\t\t\t\t\t\t\t</div>\n" +
                 "\t\t\t\t\t\t\t<div class=\"col-xs-7\">\n" +
                 "\t\t\t\t\t\t\t\t<span class=\"lead\"><strong>(.+?)</strong>",response);
-        if(num_telf!="-"){
-            num_telf=num_telf.substring(num_telf.indexOf("strong>")+7,num_telf.lastIndexOf("</strong>"));
-        }
+
 
         // SACAR FECHA RENOVACIÓN
         fecha_renovacion=encontrarDatos("Hasta el (.+?) a las",response);
-        if(fecha_renovacion!="-"){
-            fecha_renovacion=fecha_renovacion.substring(fecha_renovacion.indexOf("el")+3,fecha_renovacion.indexOf("a las")-1);
-        }
+
 
         UserData u=new UserData(tipo_usuario,internet,minutos,saldo,num_telf,fecha_renovacion);
         return u;
@@ -130,18 +124,14 @@ public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
 
         //SACAR MB DE INTERNET RESTANTES
        internet=encontrarDatos("<strong>(.+?) MB</strong> para navegar",response);
-       if(internet!="-"){
-           internet=internet.substring(internet.indexOf(">")+1,internet.lastIndexOf("MB")-1);
-       }
+
 
        // SACAR MINUTOS
         minutos=encontrarDatos("<strong>(.+?) minutos nacionales </strong>",response);
-       if(minutos!="-"){
-           minutos=minutos.substring(minutos.indexOf(">")+1,minutos.lastIndexOf("minutos")-1);
-       }else{
-           if(!response.contains("ILIMITADAS")) {
+       if(minutos.equals("-")){
+           if(response.contains("Combo")) {
                minutos = encontrarDatos("<strong>(.+?) minutos </strong> nacionales e internacionales", response);
-               if (minutos != "-") {
+               if (!minutos.equals("-")) {
                    minutos = minutos.substring(minutos.indexOf(">") + 1, minutos.lastIndexOf("minutos") - 1);
                }
            }
@@ -152,26 +142,21 @@ public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
                 "\t\t\t\t\t\t\t</div>\n" +
                 "\t\t\t\t\t\t\t<div class=\"col-xs-7 lead\">\n" +
                 "\t\t\t\t\t\t\t\t<strong>(.+?)€</strong>",response);
-       if(consumo!="-"){
-           consumo=consumo.substring(consumo.indexOf("strong>")+7,consumo.lastIndexOf("€"));
-       }
+
 
        //SACAR NÜMERO DE TELÉFONO
         num_telf=encontrarDatos("Número:\n" +
                 "\t\t\t\t\t\t\t</div>\n" +
                 "\t\t\t\t\t\t\t<div class=\"col-xs-7\">\n" +
                 "\t\t\t\t\t\t\t\t<span class=\"lead\"><strong>(.+?)</strong></span>",response);
-       if(num_telf!="-"){
-           num_telf=num_telf.substring(num_telf.indexOf("strong>")+7,num_telf.lastIndexOf("</strong>"));
-       }
+
        // SACAR FECHA DE RENOVACIÓN
         fecha_renovacion=encontrarDatos("<p>Válidos hasta el próximo día (.+?).</p>",response);
-       if(fecha_renovacion!="-"){
-           fecha_renovacion=fecha_renovacion.substring(fecha_renovacion.indexOf("día")+4,fecha_renovacion.lastIndexOf("."));
+
            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                fecha_renovacion=getFechaContrato(fecha_renovacion);
            }
-       }
+
 
         UserData u=new UserData(tipo_usuario,internet,minutos,consumo,num_telf,fecha_renovacion);
         return u;
@@ -202,7 +187,7 @@ public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
         Pattern p=Pattern.compile(textoBuscado);
        Matcher m=p.matcher(texto);
         if(m.find()){
-            coincidencia=m.group();
+            coincidencia=m.group(1);
 
         }
         return coincidencia;

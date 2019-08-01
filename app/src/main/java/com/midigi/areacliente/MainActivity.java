@@ -17,6 +17,7 @@ import com.midigi.areacliente.modelo.Usuario;
 import com.midigi.areacliente.servicios.CheckDigiUser;
 import com.midigi.areacliente.servicios.Digi;
 import com.midigi.areacliente.utils.GestionarPreferences;
+import com.midigi.areacliente.R;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

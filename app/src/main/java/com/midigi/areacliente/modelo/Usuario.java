@@ -1,5 +1,6 @@
 package com.midigi.areacliente.modelo;
 
+
 public class Usuario {
     private String telefono;
     private String contraseña;

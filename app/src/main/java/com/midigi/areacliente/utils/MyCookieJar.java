@@ -1,5 +1,6 @@
 package com.midigi.areacliente.utils;
 
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

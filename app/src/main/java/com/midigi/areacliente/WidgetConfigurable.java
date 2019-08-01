@@ -16,6 +16,7 @@ import com.midigi.areacliente.modelo.Usuario;
 import com.midigi.areacliente.servicios.Digi;
 import com.midigi.areacliente.servicios.GetDigiData;
 import com.midigi.areacliente.utils.GestionarPreferences;
+import com.midigi.areacliente.R;
 
 import java.text.DecimalFormat;
 import java.util.LinkedHashMap;

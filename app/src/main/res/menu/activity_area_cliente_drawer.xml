@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="Usuarios">
+        <menu>
+            <item
+                android:id="@+id/añadir_usuario"
+                android:icon="@drawable/nav_activar_bono"
+                android:title="Añadir Usuario" />
+        </menu>
+    </item>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/saldo"
+            android:icon="@drawable/nav_saldo"
+            android:title="Saldo/Consumo" />
+
+        <item
+            android:id="@+id/internet_roaming"
+            android:icon="@drawable/nav_internet"
+            android:title="Configurar internet/Roaming" />
+
+    </group>
+
+    <item android:title="Prepago">
+        <menu>
+            <item
+                android:id="@+id/activar_bonos"
+                android:icon="@drawable/nav_activar_bono"
+                android:title="Activar bonos" />
+            <item
+                android:id="@+id/traspaso_saldo"
+                android:icon="@drawable/nav_traspaso_saldo"
+                android:title="Traspaso de saldo" />
+
+        </menu>
+    </item>
+    <item android:title="Extra">
+        <menu>
+            <item
+                android:id="@+id/at_cliente"
+                android:icon="@drawable/nav_atencion_cliente"
+                android:title="Atención al cliente" />
+            <item
+                android:id="@+id/donacion"
+                android:icon="@drawable/paypal"
+                android:title="Haz una donación" />
+            <item
+                android:id="@+id/acerca_de"
+                android:icon="@drawable/nav_info"
+                android:title="Acerca de" />
+        </menu>
+    </item>
+
+</menu>
