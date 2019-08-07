@@ -4,6 +4,12 @@ android {
     signingConfigs {
         
        
+    debug {
+        storeFile file('C:\\Users\\yo_y_\\AndroidStudioProjects\\Clave Google Play.jks')
+        storePassword 'chocoskate1234'
+        keyAlias = 'gonzalocuadrado'
+        keyPassword 'chocoskate1234'
+    }
     }
     compileSdkVersion 28
     defaultConfig {
@@ -18,10 +24,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.gonzalocuadrado
+            signingConfig signingConfigs.debug
+
         }
         debug {
-            signingConfig signingConfigs.gonzalocuadrado
+            signingConfig signingConfigs.debug
         }
     }
 }

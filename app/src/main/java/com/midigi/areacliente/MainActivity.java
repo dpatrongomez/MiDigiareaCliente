@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -26,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private LinkedHashMap<String,Usuario> lista_usuarios;
     private Gson gson;
     private GestionarPreferences gestionarPreferences;
+    private String login_result;
+    private Usuario usuario_actual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,56 +64,59 @@ public class MainActivity extends AppCompatActivity {
         EditText caja_pass=findViewById(R.id.password);
         String usuario=caja_user.getText().toString();
         String password=caja_pass.getText().toString();
-        Usuario usuario_actual=new Usuario(usuario,password);
+        usuario_actual=new Usuario(usuario,password);
 
-        if(checkUser(usuario_actual)) {
-            if (lista_usuarios == null) {
-                lista_usuarios = new LinkedHashMap<>();
-
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                lista_usuarios.putIfAbsent(usuario_actual.getTelefono(), usuario_actual);
-            } else {
-                lista_usuarios.put(usuario_actual.getTelefono(), usuario_actual);
-            }
-
-            gestionarPreferences.guardarListaUsuarios(lista_usuarios, this);
-        /*GestionarPreferences.guardarListaUsuarios(usuario,this);
-        GestionarPreferences.guardarContraseña(password,this);*/
-            Intent i = new Intent(MainActivity.this, AreaClienteActivity.class);
-            i.putExtra("Usuario", usuario_actual.getTelefono());
-            i.putExtra("Contraseña", usuario_actual.getContraseña());
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-            finishAffinity();
-        }
-    }
-
-    public boolean checkUser(Usuario u){
-        String login_result="";
+        login_result="";
         boolean acceso_correcto=false;
         Digi digi=new Digi();
         if(digi.isNetwork(this)) {
             try {
-                login_result = new CheckDigiUser().execute(u).get();
+                ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressbar);
+                ImageView imageView=(ImageView) findViewById(R.id.digilogo);
+                progressBar.setVisibility(View.VISIBLE);
+                imageView.setVisibility(View.GONE);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                CheckDigiUser checkDigiUser=new CheckDigiUser() {
+                    protected void onPostExecute(String result) {
+                        //Do your thing
+                        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressbar);
+                        ImageView imageView=(ImageView) findViewById(R.id.digilogo);
+                        progressBar.setVisibility(View.GONE);
+                        imageView.setVisibility(View.VISIBLE);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        login_result = result;
+                        if (checkUser()) {
+
+                            if (lista_usuarios == null) {
+                                lista_usuarios = new LinkedHashMap<>();
+
+                            }
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                lista_usuarios.putIfAbsent(usuario_actual.getTelefono(), usuario_actual);
+                            } else {
+                                lista_usuarios.put(usuario_actual.getTelefono(), usuario_actual);
+                            }
+
+                            gestionarPreferences.guardarListaUsuarios(lista_usuarios, MainActivity.this);
+        /*GestionarPreferences.guardarListaUsuarios(usuario,this);
+        GestionarPreferences.guardarContraseña(password,this);*/
+                            Intent i = new Intent(MainActivity.this, AreaClienteActivity.class);
+                            i.putExtra("Usuario", usuario_actual.getTelefono());
+                            i.putExtra("Contraseña", usuario_actual.getContraseña());
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(i);
+                            finishAffinity();
+                        }
+
+                    }
+                };
+                checkDigiUser.execute(usuario_actual);
             } catch (Exception e) {
 
             }
-            if (login_result.equals("\"ok\"")) {
-                acceso_correcto = true;
-            } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("¡Atención!");
-                builder.setMessage("Usuario o contraseña incorrectos");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
 
-                    }
-                });
-                AlertDialog mensaje_inicio = builder.create();
-                mensaje_inicio.show();
-            }
+
         }else{
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("¡Atención!");
@@ -122,6 +130,27 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog mensaje_inicio = builder.create();
             mensaje_inicio.show();
         }
+    }
+
+    public boolean checkUser(){
+        boolean acceso_correcto=false;
+        if (login_result!=null) {
+            acceso_correcto = true;
+
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("¡Atención!");
+            builder.setMessage("Usuario o contraseña incorrectos");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+
+                }
+            });
+            AlertDialog mensaje_inicio = builder.create();
+            mensaje_inicio.show();
+        }
+
         return acceso_correcto;
     }
 

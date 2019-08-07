@@ -11,9 +11,18 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginTop="50dp">
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:id="@+id/progressbar"
+            android:theme="@style/CircularProgress"
+            android:indeterminate="true"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <ImageView
             android:layout_height="100dp"
             android:layout_width="wrap_content"
+            android:id="@+id/digilogo"
             android:src="@drawable/digilogo"
             android:layout_gravity="center"
 
