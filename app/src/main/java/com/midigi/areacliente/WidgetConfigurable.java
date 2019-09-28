@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -28,6 +29,8 @@ import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
+import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
+
 /**
  * Implementation of App Widget functionality.
  * App Widget Configuration implemented in {@link WidgetConfigurableConfigureActivity WidgetConfigurableConfigureActivity}
@@ -35,41 +38,48 @@ import java.util.concurrent.ExecutionException;
 public class WidgetConfigurable extends AppWidgetProvider {
 
     public static String REFRESH_ACTION = "MyCustomUpdate";
-    private static Context contextApp;
     private static UserData userData_actual;
+    private static RemoteViews views;
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+        Log.d("digi","onReceive");
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 if(intent.getAction()!=null) {
     if (intent.getAction().equals(REFRESH_ACTION)) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, WidgetConfigurable.class));
         int appWidgetId = intent.getIntExtra("APP_WIDGET_ID", -1);
-        getDatosWidget(context,true, appWidgetManager,appWidgetId);
 
+        getDatosWidget(context,true, appWidgetManager,appWidgetId);
+        resizeWidget(context,appWidgetManager,appWidgetId);
 
         Toast.makeText(context, "Actualizando...", Toast.LENGTH_SHORT).show();
         //appWidgetManager.updateAppWidget(appWidgetIds, views);
+    }else if(intent.getAction().equals(ACTION_APPWIDGET_UPDATE)){
+        if(userData_actual!=null) {
+            Bundle extras = intent.getExtras();
+            int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID);
+            getDatosWidget(context, true, appWidgetManager, appWidgetId);
+            resizeWidget(context, appWidgetManager, appWidgetId);
+        }
     }
 }
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-        resizeWidget(context,appWidgetManager,appWidgetId);
         getDatosWidget(context, false,appWidgetManager,appWidgetId);
+        resizeWidget(context,appWidgetManager,appWidgetId);
+
     }
 
-    public static void getDatosWidget(Context context, final boolean actualizacion_manual, final AppWidgetManager appWidgetManager, final int appWidgetId){
-        contextApp=context;
-        final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
+    public static void getDatosWidget(final Context context, final boolean actualizacion_manual, final AppWidgetManager appWidgetManager, final int appWidgetId){
+        //contextApp=context;
+        views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
         GestionarPreferences gestionarPreferences=null;
         gestionarPreferences=gestionarPreferences.getPreferences();
         Usuario usuario = gestionarPreferences.getUsuarioWidget(context, appWidgetId);
-        Gson gson = new Gson();
         LinkedHashMap<String, Usuario> lista_usuarios = gestionarPreferences.getListaUsuarios(context);
         if (new Digi().isNetwork(context)) {
 
@@ -84,9 +94,10 @@ if(intent.getAction()!=null) {
                             protected void onPostExecute(UserData userData) {
                                 //Do your thing
                                 userData_actual=userData;
-                                actualizarWidget(appWidgetManager,appWidgetId,views,userData);
+
+                                actualizarWidget(appWidgetManager,appWidgetId,userData,context);
                                 if(actualizacion_manual){
-                                    Toast.makeText(contextApp, "Consumo actualizado", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "Consumo actualizado", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         };
@@ -103,10 +114,10 @@ if(intent.getAction()!=null) {
             }
         }
     }
-    public static void actualizarWidget(AppWidgetManager appWidgetManager, int appWidgetId, RemoteViews views, UserData userData){
+    public static void actualizarWidget(AppWidgetManager appWidgetManager, int appWidgetId, UserData userData, Context context){
+         //views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
         CharSequence widgetInternetText = "";
         CharSequence widgetMinutosText = "";
-        CharSequence widgetSms = "";
         CharSequence widgetNumTelf = "";
         CharSequence widgetEuros = "";
         CharSequence widgetFechaRenovacion = "";
@@ -155,7 +166,7 @@ if(intent.getAction()!=null) {
                 views.setTextColor(R.id.minutos_widget, Color.parseColor(Constantes.COLOR_ADVERTENCIA_DATOS));
             }
         }catch (Exception e){
-
+            Log.d("error",e.toString());
         }
 
             views.setTextViewText(R.id.internet_widget, widgetInternetText);
@@ -166,15 +177,17 @@ if(intent.getAction()!=null) {
             views.setTextViewText(R.id.megas_gigas, widgetMbGb);
 
 
-            appWidgetManager.updateAppWidget(appWidgetId, views);
-
+            //appWidgetManager.updateAppWidget(appWidgetId, views);
+            resizeWidget(context,appWidgetManager,appWidgetId);
 
 
     }
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        super.onUpdate(context,appWidgetManager,appWidgetIds);
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
+            Log.d("digi","onUpdate");
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
@@ -183,7 +196,7 @@ if(intent.getAction()!=null) {
         Intent intent = new Intent(context, WidgetConfigurable.class);
         intent.setAction(REFRESH_ACTION);
         intent.putExtra("APP_WIDGET_ID", appWidgetID);
-        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context, appWidgetID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
@@ -196,17 +209,10 @@ if(intent.getAction()!=null) {
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
-
-
+        super.onEnabled(context);
 
     }
 
-
-    @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
-    }
 
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
@@ -216,7 +222,7 @@ if(intent.getAction()!=null) {
     }
 
     public static void resizeWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId){
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
+        //RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_configurable);
         Bundle options=appWidgetManager.getAppWidgetOptions(appWidgetId);
         int minWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int maxWidth = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
@@ -225,46 +231,53 @@ if(intent.getAction()!=null) {
         int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
         if(maxHeight<=115){
-            views.setTextViewTextSize(R.id.internet_widget, TypedValue.COMPLEX_UNIT_DIP,15);
-            views.setTextViewTextSize(R.id.minutos_widget, TypedValue.COMPLEX_UNIT_DIP,15);
-            views.setTextViewTextSize(R.id.euros_widget, TypedValue.COMPLEX_UNIT_DIP,11);
+            views.setTextViewTextSize(R.id.internet_widget, TypedValue.COMPLEX_UNIT_SP,15);
+            views.setTextViewTextSize(R.id.minutos_widget, TypedValue.COMPLEX_UNIT_SP,15);
+            views.setTextViewTextSize(R.id.euros_widget, TypedValue.COMPLEX_UNIT_SP,11);
+            //MENOS DE UNA COLUMNA DE ANCHO
             if(minWidth<=80){
                 views.setViewVisibility(R.id.refrescarWidget, View.GONE);
                 views.setViewVisibility(R.id.refrescarWidgetPequeno,View.GONE);
                 views.setViewVisibility(R.id.logo_widget, View.GONE);
                 views.setViewVisibility(R.id.logo_widget_pequeno,View.GONE);
                 views.setTextViewText(R.id.euros_widget,userData_actual.getEuros()+"€");
-                views.setTextViewTextSize(R.id.fecha_widget, TypedValue.COMPLEX_UNIT_DIP,7);
-                views.setTextViewTextSize(R.id.num_telf_widget, TypedValue.COMPLEX_UNIT_DIP,9);
+                views.setTextViewTextSize(R.id.fecha_widget, TypedValue.COMPLEX_UNIT_SP,7);
+                views.setTextViewTextSize(R.id.num_telf_widget, TypedValue.COMPLEX_UNIT_SP,9);
                 views.setTextViewText(R.id.texto_minutos,"min");
-
+            //MENOS DE 1 COLUMNA DE ANCHO PERO MÁS ESTRECHO
                 if(minWidth<=53){
-                    views.setTextViewTextSize(R.id.num_telf_widget, TypedValue.COMPLEX_UNIT_DIP,7);
-                    views.setTextViewTextSize(R.id.internet_widget, TypedValue.COMPLEX_UNIT_DIP,13);
-                    views.setTextViewTextSize(R.id.minutos_widget, TypedValue.COMPLEX_UNIT_DIP,13);
+                    views.setTextViewTextSize(R.id.num_telf_widget, TypedValue.COMPLEX_UNIT_SP,7);
+                    views.setTextViewTextSize(R.id.internet_widget, TypedValue.COMPLEX_UNIT_SP,13);
+                    views.setTextViewTextSize(R.id.minutos_widget, TypedValue.COMPLEX_UNIT_SP,13);
                 }
 
-            }else{
-                if(userData_actual.getTipo_usuario().equals("Prepago")) {
-                    views.setTextViewText(R.id.euros_widget, "Saldo: "+userData_actual.getEuros() + "€");
-                }else{
-                    views.setTextViewText(R.id.euros_widget, "Consumo: "+userData_actual.getEuros() + "€");
+            }
+            //SI TIENE MÁS DE UNA COLUMNA DE ANCHO
+            else{
+                if(userData_actual!=null) {
+                    /*if (userData_actual.getTipo_usuario().equals("Prepago")) {
+                        views.setTextViewText(R.id.euros_widget, "Saldo: " + userData_actual.getEuros() + "€");
+                    } else {
+                        views.setTextViewText(R.id.euros_widget, "Consumo: " + userData_actual.getEuros() + "€");
+                    }*/
                 }
             }
-        }else{
-            views.setTextViewTextSize(R.id.internet_widget, TypedValue.COMPLEX_UNIT_DIP,25);
-            views.setTextViewTextSize(R.id.minutos_widget, TypedValue.COMPLEX_UNIT_DIP,25);
-            views.setTextViewTextSize(R.id.euros_widget, TypedValue.COMPLEX_UNIT_DIP,16);
+        }
+        //SI TIENE MÁS DE DOS FILAS DE ALTO
+        else{
+            views.setTextViewTextSize(R.id.internet_widget, TypedValue.COMPLEX_UNIT_SP,25);
+            views.setTextViewTextSize(R.id.minutos_widget, TypedValue.COMPLEX_UNIT_SP,25);
+            views.setTextViewTextSize(R.id.euros_widget, TypedValue.COMPLEX_UNIT_SP,16);
             views.setViewVisibility(R.id.euros_widget,View.VISIBLE);
         }
 
         if(minWidth<=157 && minWidth>80){
-            views.setTextViewTextSize(R.id.num_telf_widget, TypedValue.COMPLEX_UNIT_DIP,11);
+            views.setTextViewTextSize(R.id.num_telf_widget, TypedValue.COMPLEX_UNIT_SP,11);
             views.setViewVisibility(R.id.refrescarWidget, View.GONE);
             views.setViewVisibility(R.id.refrescarWidgetPequeno,View.VISIBLE);
             views.setViewVisibility(R.id.logo_widget, View.GONE);
             views.setViewVisibility(R.id.logo_widget_pequeno,View.VISIBLE);
-            views.setTextViewTextSize(R.id.fecha_widget, TypedValue.COMPLEX_UNIT_DIP,9);
+            views.setTextViewTextSize(R.id.fecha_widget, TypedValue.COMPLEX_UNIT_SP,9);
             appWidgetManager.updateAppWidget(appWidgetId, views);
 
 
