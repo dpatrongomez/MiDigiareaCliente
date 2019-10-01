@@ -230,7 +230,7 @@ if(intent.getAction()!=null) {
         int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
         int maxHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
 
-        if(maxHeight<=115){
+        if(maxHeight<=180){
             views.setTextViewTextSize(R.id.internet_widget, TypedValue.COMPLEX_UNIT_SP,15);
             views.setTextViewTextSize(R.id.minutos_widget, TypedValue.COMPLEX_UNIT_SP,15);
             views.setTextViewTextSize(R.id.euros_widget, TypedValue.COMPLEX_UNIT_SP,11);
@@ -240,15 +240,19 @@ if(intent.getAction()!=null) {
                 views.setViewVisibility(R.id.refrescarWidgetPequeno,View.GONE);
                 views.setViewVisibility(R.id.logo_widget, View.GONE);
                 views.setViewVisibility(R.id.logo_widget_pequeno,View.GONE);
-                views.setTextViewText(R.id.euros_widget,userData_actual.getEuros()+"€");
-                views.setTextViewTextSize(R.id.fecha_widget, TypedValue.COMPLEX_UNIT_SP,7);
-                views.setTextViewTextSize(R.id.num_telf_widget, TypedValue.COMPLEX_UNIT_SP,9);
-                views.setTextViewText(R.id.texto_minutos,"min");
+                if(userData_actual!=null) {
+                    views.setTextViewText(R.id.euros_widget, userData_actual.getEuros() + "€");
+                }
+                    views.setTextViewTextSize(R.id.fecha_widget, TypedValue.COMPLEX_UNIT_SP, 7);
+                    views.setTextViewTextSize(R.id.num_telf_widget, TypedValue.COMPLEX_UNIT_SP, 9);
+                    views.setTextViewText(R.id.texto_minutos, "min");
+
             //MENOS DE 1 COLUMNA DE ANCHO PERO MÁS ESTRECHO
                 if(minWidth<=53){
-                    views.setTextViewTextSize(R.id.num_telf_widget, TypedValue.COMPLEX_UNIT_SP,7);
-                    views.setTextViewTextSize(R.id.internet_widget, TypedValue.COMPLEX_UNIT_SP,13);
-                    views.setTextViewTextSize(R.id.minutos_widget, TypedValue.COMPLEX_UNIT_SP,13);
+                        views.setTextViewTextSize(R.id.num_telf_widget, TypedValue.COMPLEX_UNIT_SP, 7);
+                        views.setTextViewTextSize(R.id.internet_widget, TypedValue.COMPLEX_UNIT_SP, 13);
+                        views.setTextViewTextSize(R.id.minutos_widget, TypedValue.COMPLEX_UNIT_SP, 13);
+
                 }
 
             }

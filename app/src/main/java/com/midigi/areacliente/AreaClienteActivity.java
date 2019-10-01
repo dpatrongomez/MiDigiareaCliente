@@ -18,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -245,8 +246,13 @@ public class AreaClienteActivity extends AppCompatActivity
         SubMenu menuGroup = m.findItem(0).getSubMenu();
         menuGroup.clear();
         for(String u : lista_usuarios.keySet()){
-            int id=Integer.parseInt(u);
-            menuGroup .add(0,id,0,u).setIcon(R.drawable.baseline_account_circle_black_48dp);
+            try {
+                int id = Integer.parseInt(u);
+
+                menuGroup.add(0, id, 0, u).setIcon(R.drawable.baseline_account_circle_black_48dp);
+            }catch (Exception e){
+                Log.d("error",e.toString());
+            }
         }
         menuGroup .add(0, Constantes.ID_AÑADIR_USUARIOS,0,"Añadir usuario").setIcon(R.drawable.person_add);
 

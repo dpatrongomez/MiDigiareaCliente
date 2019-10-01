@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -86,8 +87,14 @@ public class WidgetConfigurableConfigureActivity extends Activity {
         listViewUsuarios =(ListView) findViewById((R.id.lista_usuarios));
         Gson gson=new Gson();
         LinkedHashMap<String, Usuario> lista_usuarios=gestionarPreferences.getListaUsuarios(this);
-        ;
-        List<Usuario> h=new ArrayList<>(lista_usuarios.values());
+        List<Usuario> h;
+        if(lista_usuarios!=null) {
+            h = new ArrayList<>(lista_usuarios.values());
+
+        }else{
+            h=new ArrayList<>();
+
+        }
         ArrayAdapter<Usuario> arrayAdapter = new ArrayAdapter<Usuario>(this, android.R.layout.simple_list_item_single_choice, h);
         listViewUsuarios.setAdapter(arrayAdapter);
         listViewUsuarios.setOnItemClickListener(new AdapterView.OnItemClickListener() {
