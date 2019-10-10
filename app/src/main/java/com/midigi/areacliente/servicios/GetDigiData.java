@@ -131,9 +131,7 @@ public class GetDigiData extends AsyncTask<Usuario,Void, UserData> {
        if(minutos.equals("-")){
            if(response.contains("Combo")) {
                minutos = encontrarDatos("<strong>(.+?) minutos </strong> nacionales e internacionales", response);
-               if (!minutos.equals("-")) {
-                   minutos = minutos.substring(minutos.indexOf(">") + 1, minutos.lastIndexOf("minutos") - 1);
-               }
+
            }
        }
        // SACAR CONSUMO
