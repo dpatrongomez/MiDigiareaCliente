@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -15,15 +15,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.midigi.areacliente.modelo.Usuario;
 import com.midigi.areacliente.servicios.CheckDigiUser;
 import com.midigi.areacliente.servicios.Digi;
 import com.midigi.areacliente.utils.GestionarPreferences;
-import com.midigi.areacliente.R;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private LinkedHashMap<String,Usuario> lista_usuarios;

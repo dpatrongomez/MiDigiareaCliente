@@ -3,31 +3,26 @@ package com.midigi.areacliente;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.midigi.areacliente.modelo.UserData;
 import com.midigi.areacliente.modelo.Usuario;
 import com.midigi.areacliente.servicios.Digi;
 import com.midigi.areacliente.servicios.GetDigiData;
 import com.midigi.areacliente.utils.Constantes;
 import com.midigi.areacliente.utils.GestionarPreferences;
-import com.midigi.areacliente.R;
 
 import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
-import java.util.concurrent.ExecutionException;
 
 import static android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE;
 
